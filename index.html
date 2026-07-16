@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics="">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0c0c0c;--surface:#161616;--surface-2:#1d1d1d;--text:#f5f5f5;--mute:#8a8a8a;
+  --line:rgba(245,245,245,0.10);--line-2:rgba(245,245,245,0.06);
+  --accent:#ff5e00;--accent-dim:rgba(255,94,0,0.12);--accent-glow:rgba(255,94,0,0.35);
+  --display:"Poppins",system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,monospace;--body:"Poppins",system-ui,sans-serif;
+  --radius-sm:8px;--radius-md:14px;--radius-lg:22px;--radius-pill:999px;
+  --maxw:1180px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--body);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:var(--accent);text-decoration:none}
+a:hover{color:#ff7a2e}
+img{display:block;max-width:100%}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+::-webkit-scrollbar{height:0;width:0}
+.dt-page{position:relative;width:100%;overflow:hidden}
+.dt-wrap{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+.mono{font-family:var(--mono)}
+
+/* nav */
+.dt-nav{position:sticky;top:0;z-index:60;width:100%;transition:background .3s,border-color .3s,backdrop-filter .3s;border-bottom:1px solid transparent}
+.dt-nav.scrolled{background:rgba(12,12,12,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.dt-nav-in{max-width:var(--maxw);margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:16px}
+.dt-logo{width:auto;height:auto;max-height:30px;object-fit:contain;align-self:flex-start}
+.dt-nav-links{display:none;margin-left:auto;gap:26px}
+.dt-nav-links a{color:var(--mute);font-size:13px;font-weight:500;letter-spacing:.01em;transition:color .18s}
+.dt-nav-links a:hover{color:var(--text)}
+.dt-nav-cta{margin-left:auto}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--display);font-weight:600;border-radius:var(--radius-pill);transition:transform .18s cubic-bezier(.2,.7,.3,1),background .2s,box-shadow .2s;line-height:1}
+.btn:active{transform:scale(.96)}
+.btn-primary{background:var(--accent);color:#0c0c0c;padding:11px 20px;font-size:14px;box-shadow:0 6px 24px -8px var(--accent-glow)}
+.btn-primary:hover{background:#ff7223;transform:translateY(-2px);box-shadow:0 12px 34px -8px var(--accent-glow);color:#0c0c0c}
+.btn-outline{background:transparent;color:var(--text);border:1px solid var(--line);padding:11px 20px;font-size:14px}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
+.btn-sm{padding:9px 16px;font-size:13px}
+
+/* pills / eyebrow */
+.livepill{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);background:var(--accent-dim);border:1px solid rgba(255,94,0,.22);padding:6px 12px;border-radius:var(--radius-pill)}
+.livedot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 0 var(--accent-glow);animation:pulse 1.8s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 var(--accent-glow)}70%{box-shadow:0 0 0 7px rgba(255,94,0,0)}100%{box-shadow:0 0 0 0 rgba(255,94,0,0)}}
+.eyebrow{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+
+/* section header */
+.sec{padding:56px 0}
+.sechead{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:24px}
+.sechead h2{font-family:var(--display);font-weight:800;font-size:28px;letter-spacing:-.02em;margin:8px 0 0;line-height:1.05}
+.sectitle-mob{}
+
+/* hero */
+.hero{position:relative;overflow:hidden;min-height:520px;display:flex;align-items:center}
+.hero-bg{position:absolute;inset:0;z-index:0}
+.hero-bg img{width:100%;height:100%;object-fit:cover;object-position:70% center;display:block}
+.hero-bg-shade{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(12,12,12,.55) 0%,rgba(12,12,12,.62) 38%,rgba(12,12,12,.96) 82%,#0c0c0c 100%)}
+.hero .dt-wrap{position:relative;z-index:1;width:100%}
+.hero-copy{display:flex;flex-direction:column;align-items:flex-start;padding:64px 0 40px}
+.hero h1{font-family:var(--display);font-weight:900;font-size:36px;line-height:1.04;letter-spacing:-.03em;margin:14px 0 0;text-shadow:0 2px 20px rgba(0,0,0,.4)}
+.hero h1 .amp{color:var(--accent)}
+.hero-sub{color:#d6d6d6;font-size:15px;line-height:1.55;margin:14px 0 0;max-width:48ch}
+.hero-stats{display:flex;flex-direction:column;gap:10px;margin:22px 0 0;width:100%}
+.hstat{display:flex;align-items:center;gap:12px;background:rgba(12,12,12,.5);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(245,245,245,.14);border-radius:var(--radius-md);padding:14px 16px}
+.hstat-ic{font-size:22px;line-height:1;flex:0 0 auto}
+.hstat-val{font-family:var(--display);font-weight:800;font-size:21px;letter-spacing:-.02em;line-height:1.15;color:var(--text)}
+.hstat-val.acc{color:var(--accent)}
+.hstat-label{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#b8b8b8;margin-top:3px}
+.hero-ctas{display:flex;flex-direction:column;align-items:stretch;gap:12px;margin:22px 0 0;width:100%}
+.hero-ctas .btn-primary{width:100%;padding:16px;font-size:16px}
+.hero-ctas .btn-outline{align-self:center;background:none;border:none;color:#b8b8b8;text-decoration:underline;text-underline-offset:3px;padding:2px 0;font-size:13.5px;box-shadow:none}
+.hero-ctas .btn-outline:hover{color:var(--text);background:none;transform:none}
+
+/* placeholder pattern */
+.ph{position:relative;background:repeating-linear-gradient(135deg,#161616 0 11px,#191919 11px 22px);display:flex;align-items:center;justify-content:center}
+.ph::after{content:attr(data-ph);font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#5a5a5a;padding:4px 8px;border:1px solid var(--line-2);border-radius:6px;background:rgba(12,12,12,.5)}
+
+/* ticker */
+.ticker{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--surface);overflow:hidden;padding:0}
+.ticker-mask{max-width:100%;margin:0 auto;overflow:hidden;position:relative}
+.ticker-track{display:flex;width:max-content;animation:marquee 34s linear infinite}
+.ticker:hover .ticker-track{animation-play-state:paused}
+@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.tick{display:inline-flex;align-items:center;gap:9px;padding:14px 22px;white-space:nowrap;font-size:13px;color:var(--text);border-right:1px solid var(--line-2)}
+.tick .who{font-family:var(--mono);font-weight:600;color:var(--text)}
+.tick .meta{color:var(--mute)}
+.tick .sr{font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:.04em}
+
+/* tabs */
+.tabs{display:inline-flex;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-pill);padding:4px}
+.tab{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);padding:8px 15px;border-radius:var(--radius-pill);transition:color .18s,background .18s;white-space:nowrap}
+.tab .cnt{opacity:.6;margin-left:6px;font-size:11px}
+.tab.active{background:var(--accent);color:#0c0c0c}
+.tab:not(.active):hover{color:var(--text)}
+
+/* series carousel */
+.carousel{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:2px 20px 8px;margin:0 -20px;scroll-padding-left:20px}
+.scard{scroll-snap-align:start;flex:0 0 78%;max-width:300px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden;text-align:left;transition:transform .2s cubic-bezier(.2,.7,.3,1),border-color .2s;display:flex;flex-direction:column}
+.scard:hover{transform:translateY(-3px);border-color:rgba(255,94,0,.35)}
+.scard:active{transform:scale(.98)}
+.scard-art{position:relative;aspect-ratio:16/10;width:100%}
+.scard-art img{width:100%;height:100%;object-fit:cover}
+.scard-art .grad{position:absolute;inset:0;background:linear-gradient(to top,rgba(12,12,12,.92) 6%,rgba(12,12,12,.15) 55%,transparent)}
+.scard-badge{position:absolute;top:10px;left:10px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 9px;border-radius:var(--radius-pill);display:inline-flex;align-items:center;gap:6px}
+.b-live{background:var(--accent);color:#0c0c0c}
+.b-upcoming{background:rgba(245,245,245,.12);color:var(--text);border:1px solid var(--line)}
+.b-ended{background:rgba(245,245,245,.06);color:var(--mute)}
+.scard-num{position:absolute;top:10px;right:12px;font-family:var(--display);font-weight:900;font-size:30px;color:rgba(245,245,245,.14);letter-spacing:-.03em}
+.scard-body{padding:14px 16px 16px}
+.scard-name{font-family:var(--display);font-weight:700;font-size:17px;letter-spacing:-.01em}
+.scard-date{font-family:var(--mono);font-size:11px;color:var(--mute);margin-top:5px;letter-spacing:.03em}
+.scard-foot{display:flex;align-items:flex-end;justify-content:space-between;margin-top:14px;padding-top:13px;border-top:1px solid var(--line-2)}
+.scard-pool .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--mute)}
+.scard-pool .v{font-family:var(--display);font-weight:800;font-size:18px;color:var(--accent);margin-top:3px}
+.scard-arrow{font-family:var(--mono);font-size:12px;color:var(--mute);transition:color .18s,transform .18s}
+.scard:hover .scard-arrow{color:var(--accent);transform:translateX(2px)}
+.emptymsg{padding:34px 0;color:var(--mute);font-family:var(--mono);font-size:12px;letter-spacing:.04em;text-align:center;width:100%}
+
+/* modal */
+.overlay{position:fixed;inset:0;z-index:100;background:rgba(6,6,6,.78);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;align-items:flex-end;justify-content:center;animation:fadein .2s ease}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+.modal{position:relative;width:100%;max-width:560px;max-height:92vh;overflow-y:auto;background:var(--surface);border:1px solid var(--line);border-radius:22px 22px 0 0;animation:slideup .28s cubic-bezier(.2,.8,.2,1)}
+@keyframes slideup{from{transform:translateY(28px);opacity:.4}to{transform:translateY(0);opacity:1}}
+.modal-art{position:relative;aspect-ratio:16/8;width:100%}
+.modal-art img{width:100%;height:100%;object-fit:cover}
+.modal-art .grad{position:absolute;inset:0;background:linear-gradient(to top,var(--surface) 4%,transparent 60%)}
+.modal-close{position:absolute;top:12px;right:12px;z-index:3;width:34px;height:34px;border-radius:50%;background:rgba(12,12,12,.6);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--text);backdrop-filter:blur(4px)}
+.modal-close:hover{border-color:var(--accent);color:var(--accent)}
+.modal-body{padding:18px 22px 26px;margin-top:-40px;position:relative;z-index:2}
+.modal-body h3{font-family:var(--display);font-weight:800;font-size:24px;letter-spacing:-.02em;margin:0}
+.modal-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:8px;font-family:var(--mono);font-size:11.5px;color:var(--mute);letter-spacing:.03em}
+.modal-pool{margin-top:18px;background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius-md);padding:16px}
+.modal-pool .big{font-family:var(--display);font-weight:800;font-size:28px;color:var(--accent);letter-spacing:-.02em}
+.modal-pool .big .k{display:block;font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);margin-bottom:4px}
+.tier{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-top:1px solid var(--line-2);font-size:14px}
+.tier:first-of-type{margin-top:14px}
+.tier .rk{font-family:var(--mono);font-size:12px;color:var(--mute);letter-spacing:.04em}
+.tier .amt{font-family:var(--display);font-weight:700;color:var(--text)}
+.rule{margin-top:16px;display:flex;gap:11px;align-items:flex-start;background:var(--accent-dim);border:1px solid rgba(255,94,0,.2);border-radius:var(--radius-md);padding:13px 15px}
+.rule .ico{font-family:var(--mono);color:var(--accent);font-weight:700}
+.rule p{margin:0;font-size:13px;line-height:1.5;color:var(--text)}
+.rule b{color:var(--accent)}
+.modal-cta{margin-top:18px;width:100%}
+
+/* how it works */
+.how{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:56px 0}
+.how-head{text-align:center;max-width:480px;margin:0 auto 36px}
+.how-head .eyebrow{display:block}
+.how-head h2{margin-top:8px}
+.how-grid{display:flex;flex-direction:column;gap:28px;position:relative}
+.how-step{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;flex:1;position:relative;z-index:1}
+.how-icon{width:64px;height:64px;border-radius:50%;background:var(--surface);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.how-icon svg{width:28px;height:28px}
+.how-step h4{font-family:var(--display);font-weight:700;font-size:17px;margin:0}
+.how-step p{margin:0;color:var(--mute);font-size:14px;line-height:1.5;max-width:26ch}
+
+/* treasure hunt (removed) */
+.chest{width:74px;height:74px;border-radius:var(--radius-md);background:var(--surface-2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:30px;transition:transform .18s cubic-bezier(.2,.7,.3,1),border-color .2s,background .2s;position:relative}
+.chest:hover:not(.done){transform:translateY(-4px);border-color:var(--accent)}
+.chest:active:not(.done){transform:scale(.94)}
+.chest.picked{background:var(--accent-dim);border-color:var(--accent)}
+.chest.dim{opacity:.4}
+.th-result{margin-top:22px;font-family:var(--mono);font-size:13px;color:var(--accent);letter-spacing:.03em;min-height:20px}
+.th-reset{margin-top:14px;font-family:var(--mono);font-size:11px;color:var(--mute);text-decoration:underline;letter-spacing:.04em}
+.th-reset:hover{color:var(--text)}
+
+/* voucher banner (compact card) */
+.sec-voucher{padding:30px 0 6px}
+.voucher-card{background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:var(--radius-lg);padding:28px 26px;display:flex;flex-direction:column;align-items:flex-start;gap:14px}
+.voucher-card .vtxt{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+.voucher-tag{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);background:var(--accent-dim);border:1px solid rgba(255,94,0,.22);padding:5px 11px;border-radius:var(--radius-pill);display:inline-flex;align-items:center;gap:7px}
+.voucher-tag .dot-static{width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.voucher-card h2{font-family:var(--display);font-weight:800;font-size:26px;letter-spacing:-.02em;margin:0;line-height:1.05;color:var(--text)}
+.voucher-card p{font-family:var(--mono);font-size:12.5px;letter-spacing:.03em;color:var(--mute);margin:0}
+.btn-invert{background:#0c0c0c;color:var(--accent);padding:12px 24px;font-size:14px;margin-top:3px}
+.btn-invert:hover{background:#1a1a1a;color:var(--accent);transform:translateY(-2px);box-shadow:0 12px 30px -10px rgba(0,0,0,.5)}
+
+/* big wins teaser */
+.winteaser{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);padding:32px 28px;display:flex;flex-direction:column;gap:22px;transition:border-color .2s,transform .2s}
+.winteaser:hover{border-color:rgba(255,94,0,.35);transform:translateY(-2px)}
+.winteaser-copy{max-width:480px}
+.winteaser-copy h2{font-family:var(--display);font-weight:800;font-size:26px;letter-spacing:-.02em;margin:8px 0 0;line-height:1.1}
+.winteaser-copy p{color:var(--mute);font-size:14.5px;line-height:1.55;margin:10px 0 0}
+.wt-cards{display:flex;gap:12px;flex-wrap:wrap}
+.wt-card{flex:1 1 150px;min-width:140px;background:#171717;border:1px solid rgba(255,255,255,.10);border-radius:var(--radius-md);padding:12px;display:flex;flex-direction:column;gap:8px}
+.wt-top{display:flex;align-items:center;gap:10px}
+.wt-thumb{width:40px;height:40px;border-radius:8px;object-fit:cover;flex:0 0 auto}
+.wt-tag{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#0c0c0c;background:var(--accent);padding:3px 8px;border-radius:var(--radius-pill);display:inline-flex;width:fit-content}
+.wt-amt{font-family:var(--display);font-weight:800;font-size:21px;color:var(--accent);letter-spacing:-.02em;line-height:1}
+.wt-game{font-family:var(--mono);font-size:11px;color:var(--mute);letter-spacing:.02em}
+.winteaser-foot{display:flex}
+
+/* hot games grid */
+.gamegrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.gcard{text-align:left;display:block;color:inherit;text-decoration:none}
+.gcard-art{aspect-ratio:1/1;border-radius:var(--radius-md);width:100%;transition:border-color .2s}
+.gcard-name{font-family:var(--display);font-weight:600;font-size:13px;margin-top:9px;line-height:1.2}
+.gcard-rtp{font-family:var(--mono);font-size:10px;color:var(--mute);letter-spacing:.06em;margin-top:4px;text-transform:uppercase}
+.games-more{margin-top:26px;display:flex;justify-content:center}
+
+/* operators teaser */
+.optease{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);padding:32px 28px;display:flex;flex-direction:column;gap:22px;transition:border-color .2s,transform .2s}
+.optease:hover{border-color:rgba(255,94,0,.35);transform:translateY(-2px)}
+.optease-copy{max-width:480px}
+.optease-copy h2{font-family:var(--display);font-weight:800;font-size:26px;letter-spacing:-.02em;margin:8px 0 0;line-height:1.1}
+.optease-copy p{color:var(--mute);font-size:14.5px;line-height:1.55;margin:10px 0 0}
+.optease-logos{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.optile{width:84px;height:52px;border-radius:var(--radius-sm);background:#171717;border:1px solid rgba(255,255,255,.10);display:flex;align-items:center;justify-content:center;padding:8px;flex:0 0 auto}
+.optile img{max-width:72%;max-height:26px;width:auto;height:auto;object-fit:contain;display:block}
+.opmore{font-family:var(--mono);font-size:11.5px;font-weight:600;color:var(--mute);letter-spacing:.04em;white-space:nowrap}
+.optease-foot{display:flex}
+
+/* faq */
+.faq-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden}
+.faq-head{font-family:var(--display);font-weight:800;font-size:18px;letter-spacing:-.01em;padding:20px 22px;border-bottom:1px solid var(--line-2)}
+.faq-item{border-bottom:1px solid var(--line-2)}
+.faq-item:last-child{border-bottom:none}
+.faq-q{width:100%;display:flex;align-items:center;justify-content:space-between;gap:14px;text-align:left;padding:17px 22px;font-family:var(--display);font-weight:600;font-size:14.5px;color:var(--text);transition:background .15s}
+.faq-q:hover{background:var(--line-2)}
+.faq-q .ic{font-family:var(--mono);color:var(--text);font-size:13px;transition:transform .2s;flex:0 0 auto}
+.faq-item.open .faq-q .ic{transform:rotate(180deg)}
+.faq-a{overflow:hidden;max-height:0;transition:max-height .28s ease,opacity .2s;padding:0 22px}
+.faq-item.open .faq-a{max-height:320px;opacity:1;padding-bottom:20px}
+.faq-a p{margin:0;color:var(--mute);font-size:13.5px;line-height:1.65;max-width:62ch}
+.faq-a a{color:var(--accent)}
+.faq-a a:hover{opacity:.8}
+
+/* sponsor strip */
+.sponsor-strip{position:relative;background:#101010;border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden}
+.sponsor-line{position:absolute;top:-1px;left:0;right:0;height:70px;pointer-events:none;background:radial-gradient(60% 100% at 50% 0%, rgba(255,94,0,.4), transparent 70%);filter:blur(18px);opacity:.7}
+.sponsor-row{position:relative;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:44px;padding:34px 40px}
+.sponsor-logo{height:28px;width:auto;object-fit:contain;display:block}
+
+/* footer */
+.footer{border-top:1px solid var(--line);padding:40px 0 120px;margin-top:20px}
+.foot-top{display:flex;flex-direction:column;align-items:flex-start;gap:22px}
+.foot-badges{display:flex;flex-wrap:wrap;gap:10px}
+.fbadge{font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);border:1px solid var(--line);border-radius:var(--radius-sm);padding:7px 11px}
+.foot-social{display:flex;gap:10px}
+.fsoc{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--mute);font-family:var(--mono);font-size:12px;transition:border-color .18s,color .18s}
+.fsoc:hover{border-color:var(--accent);color:var(--accent)}
+.foot-fine{margin-top:26px;padding-top:22px;border-top:1px solid var(--line-2);color:var(--mute);font-size:12px;line-height:1.6}
+.foot-fine .cc{display:block;margin-bottom:8px;font-family:var(--mono);font-size:11px;letter-spacing:.03em}
+
+/* sticky cta */
+.sticky{position:fixed;left:0;right:0;bottom:0;z-index:80;padding:14px 20px calc(14px + env(safe-area-inset-bottom));background:linear-gradient(to top,var(--bg) 60%,transparent);transform:translateY(140%);transition:transform .34s cubic-bezier(.2,.8,.2,1);pointer-events:none}
+.sticky.show{transform:translateY(0)}
+.sticky .btn{width:100%;pointer-events:auto;padding:15px;font-size:15px}
+
+/* reveal */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s cubic-bezier(.2,.7,.3,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* ===== TABLET ===== */
+@media(min-width:768px){
+  .dt-wrap,.dt-nav-in{padding-left:32px;padding-right:32px}
+  .dt-logo{max-height:34px}
+  .hero h1{font-size:52px}
+  .hero-sub{font-size:16px;max-width:56ch}
+  .hero-stats{flex-direction:row}
+  .hero-ctas{flex-direction:row}
+  .hero-ctas .btn-primary{width:auto}
+  .hero-ctas .btn-outline{align-self:center;border:1px solid var(--line);color:var(--text);text-decoration:none;padding:11px 20px;font-size:14px}
+  .hero-ctas .btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+  .sechead h2{font-size:34px}
+  .scard{flex:0 0 42%;max-width:340px}
+  .winteaser{flex-direction:row;align-items:center;justify-content:space-between;gap:28px;padding:30px 34px}
+  .winteaser-foot{flex:0 0 auto}
+  .wt-cards{flex-wrap:nowrap}
+  .wt-card{flex:0 0 150px}
+  .voucher-card{flex-direction:row;align-items:center;justify-content:space-between;gap:28px;padding:26px 30px}
+  .voucher-card .vtxt{display:flex;flex-direction:column;gap:9px;align-items:flex-start}
+  .voucher-card h2{font-size:28px}
+  .btn-invert{margin-top:0;flex:0 0 auto;white-space:nowrap}
+  .optease{flex-direction:row;align-items:center;justify-content:space-between;gap:28px;padding:30px 34px}
+  .optease-foot{flex:0 0 auto}
+  .modal{border-radius:22px;margin:0 24px}
+  .overlay{align-items:center}
+}
+
+/* ===== DESKTOP ===== */
+@media(min-width:1024px){
+  .sec{padding:76px 0}
+  .dt-nav-links{display:flex}
+  .hero{min-height:660px}
+  .hero-bg img{object-position:78% center}
+  .hero-bg-shade{background:linear-gradient(to right,rgba(12,12,12,.92) 0%,rgba(12,12,12,.72) 32%,rgba(12,12,12,.28) 56%,rgba(12,12,12,.05) 78%)}
+  .hero-copy{max-width:640px;padding:0}
+  .hero h1{font-size:64px}
+  .hero-stats{gap:14px}
+  .hstat{padding:16px 20px}
+  .hstat-val{font-size:24px}
+  .sechead h2{font-size:40px}
+  /* series -> grid, no scroll */
+  .carousel{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;overflow:visible;padding:2px 0 4px;margin:0;scroll-snap-type:none}
+  .scard{flex:none;max-width:none}
+  .gamegrid{grid-template-columns:repeat(6,1fr);gap:16px}
+  .voucher-card h2{font-size:30px}
+  .how-grid{flex-direction:row;gap:0;align-items:flex-start}
+  .how-step{flex:1;padding:0 24px}
+  .how-grid::before{content:"";position:absolute;left:calc(100%/6);right:calc(100%/6);top:32px;height:1px;background:var(--line);z-index:0}
+  .chest{width:88px;height:88px;font-size:36px}
+  /* sticky -> corner button */
+  .sticky{left:auto;right:26px;bottom:26px;padding:0;background:none;max-width:280px}
+  .sticky .btn{width:auto;box-shadow:0 14px 40px -10px var(--accent-glow)}
+  .th{padding:40px}
+}
+@media(min-width:1280px){
+  .hero h1{font-size:72px}
+}
+</style>
+</helmet>
+<div class="dt-page">
+
+  <nav class="dt-nav {{ navClass }}">
+    <div class="dt-nav-in">
+      <a href="{{ siteHomeLink }}"><img class="dt-logo" src="assets/advantplay-logo-horizontal.png" alt="AdvantPlay"></a>
+      <div class="dt-nav-links">
+        <a href="#series" onClick="{{ navScrollTo('series') }}">Series</a>
+        <a href="#voucher" onClick="{{ navScrollTo('voucher') }}">Voucher</a>
+        <a href="#bigwins" onClick="{{ navScrollTo('bigwins') }}">Big Wins</a>
+        <a href="#faq" onClick="{{ navScrollTo('faq') }}">FAQ</a>
+      </div>
+      <a class="btn btn-primary btn-sm dt-nav-cta" href="{{ tgJoinLink }}" target="_blank" rel="noopener">Join free</a>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="hero-bg">
+      <img src="assets/dragon-key-art.jpg" alt="Dragon Chi's Quest 2">
+      <div class="hero-bg-shade"></div>
+    </div>
+    <div class="dt-wrap">
+      <div class="hero-copy">
+        <span class="livepill"><span class="livedot"></span>Live Now · August Series</span>
+        <h1>Play. Climb. Win <span class="amp">MYR250,000.</span></h1>
+        <p class="hero-sub">Every wager counts. Every rank matters. Finish at the top and claim exclusive voucher prizes.</p>
+        <div class="hero-stats">
+          <div class="hstat">
+            <span class="hstat-ic">🏆</span>
+            <div>
+              <div class="hstat-val acc">MYR 250,000</div>
+              <div class="hstat-label">Total Prize Pool</div>
+            </div>
+          </div>
+          <div class="hstat">
+            <span class="hstat-ic">⏳</span>
+            <div>
+              <div class="hstat-val">{{ daysRemaining }} Days</div>
+              <div class="hstat-label">Remaining</div>
+            </div>
+          </div>
+        </div>
+        <div class="hero-ctas">
+          <a class="btn btn-primary" href="{{ tgJoinLink }}" target="_blank" rel="noopener">Join Tournament →</a>
+          <button class="btn btn-outline" onClick="{{ scrollToSeries }}">View Series</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="sec-voucher" id="voucher">
+    <div class="dt-wrap">
+      <div class="voucher-card">
+        <div class="vtxt">
+          <span class="voucher-tag"><span class="dot-static"></span>Limited · {{ voucherCountdown }} Left</span>
+          <h2>Claim your free spin voucher.</h2>
+          <p>New members · no deposit required</p>
+        </div>
+        <a class="btn btn-primary" href="{{ tgJoinLink }}" target="_blank" rel="noopener">Claim →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="ticker">
+    <div class="ticker-mask">
+      <div class="ticker-track">
+        <sc-for list="{{ tickerLoop }}" as="row" hint-placeholder-count="12">
+          <span class="tick"><span class="who">{{ row.who }}</span><span class="meta">{{ row.meta }}</span><span class="sr">{{ row.sr }}</span></span>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec reveal" id="series">
+    <div class="dt-wrap">
+      <div class="sechead">
+        <div>
+          <span class="eyebrow">The Series</span>
+          <h2>Seven ways to win</h2>
+        </div>
+        <div class="tabs">
+          <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
+            <button class="tab {{ t.cls }}" onClick="{{ t.onClick }}">{{ t.label }}<span class="cnt">{{ t.count }}</span></button>
+          </sc-for>
+        </div>
+      </div>
+      <div class="carousel">
+        <sc-for list="{{ filteredSeries }}" as="s" hint-placeholder-count="4">
+          <button class="scard" onClick="{{ s.onOpen }}">
+            <div class="scard-art">
+              <img src="assets/dragon-key-art.jpg" alt="{{ s.name }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
+              <div class="grad"></div>
+              <span class="scard-badge {{ s.badgeCls }}"><sc-if value="{{ s.isLive }}" hint-placeholder-val="{{ false }}"><span class="livedot" style="width:6px;height:6px"></span></sc-if>{{ s.statusLabel }}</span>
+              <span class="scard-num">{{ s.num }}</span>
+            </div>
+            <div class="scard-body">
+              <div class="scard-name">{{ s.shortName }}</div>
+              <div class="scard-date">{{ s.dateRange }}</div>
+              <div class="scard-foot">
+                <div class="scard-pool"><div class="k">Prize pool</div><div class="v">{{ s.prizePool }}</div></div>
+                <span class="scard-arrow">Details →</span>
+              </div>
+            </div>
+          </button>
+        </sc-for>
+        <sc-if value="{{ isEmpty }}" hint-placeholder-val="{{ false }}"><div class="emptymsg">No series in this state right now.</div></sc-if>
+      </div>
+    </div>
+  </section>
+
+  <section class="how" id="how">
+    <div class="dt-wrap reveal">
+      <div class="how-head">
+        <span class="eyebrow">How it works</span>
+        <h2>Three steps to the hoard</h2>
+      </div>
+      <div class="how-grid">
+        <div class="how-step">
+          <div class="how-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="rgba(245,245,245,0.88)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M13 19c0-3.31-3.13-6-7-6s-7 2.69-7 6" transform="translate(2,-1)"></path>
+              <circle cx="8" cy="7" r="4"></circle>
+              <path d="M19 8v6M22 11h-6" stroke="var(--accent)"></path>
+            </svg>
+          </div>
+          <h4>Join</h4>
+          <p>Create an account and opt in to the tournament.</p>
+        </div>
+        <div class="how-step">
+          <div class="how-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="rgba(245,245,245,0.88)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="9.25"></circle>
+              <path d="M10 8.5l6 3.5-6 3.5v-7z" fill="var(--accent)" stroke="var(--accent)"></path>
+            </svg>
+          </div>
+          <h4>Play</h4>
+          <p>Play qualifying games during the tournament period to earn leaderboard points.</p>
+        </div>
+        <div class="how-step">
+          <div class="how-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="rgba(245,245,245,0.88)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M7 4h10v4a5 5 0 0 1-10 0V4z"></path>
+              <path d="M7 5H4a3 3 0 0 0 3 4M17 5h3a3 3 0 0 1-3 4"></path>
+              <path d="M12 13v3"></path>
+              <path d="M9 20h6M9.5 20c0-2 .8-3 2.5-3s2.5 1 2.5 3" stroke="var(--accent)"></path>
+            </svg>
+          </div>
+          <h4>Win</h4>
+          <p>Finish in the prize positions and receive your tournament reward.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec reveal" id="bigwins">
+    <div class="dt-wrap">
+      <a class="winteaser" href="{{ liveWinsPageLink }}">
+        <div class="winteaser-copy">
+          <span class="eyebrow">Live Win Activity</span>
+          <h2>See What Players Are Winning</h2>
+          <p>Explore the latest big wins and live player activity across our featured games.</p>
+        </div>
+        <div class="wt-cards">
+          <sc-for list="{{ featuredWins }}" as="w" hint-placeholder-count="3">
+            <div class="wt-card">
+              <div class="wt-top">
+                <img class="wt-thumb" src="{{ w.thumb }}" alt="{{ w.game }}">
+                <span class="wt-tag">{{ w.tag }}</span>
+              </div>
+              <div class="wt-amt">{{ w.amount }}</div>
+              <div class="wt-game">{{ w.game }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <div class="winteaser-foot">
+          <span class="btn btn-primary">View Live Wins →</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <section class="sec reveal" id="games" style="padding-top:0">
+    <div class="dt-wrap">
+      <div class="sechead">
+        <div><span class="eyebrow">Featured</span><h2>Games</h2><p style="font-family:var(--mono);font-size:13px;color:var(--mute);margin:8px 0 0">Discover our most popular games and start winning today</p></div>
+      </div>
+      <div class="gamegrid">
+        <sc-for list="{{ games }}" as="g" hint-placeholder-count="8">
+          <a class="gcard" href="{{ gamesPageLink }}" target="_blank" rel="noopener">
+            <img class="gcard-art" src="{{ g.thumb }}" alt="{{ g.name }}" style="object-fit:cover">
+            <div class="gcard-name" data-om-label="r">{{ g.name }}</div>
+            <div class="gcard-rtp">RTP {{ g.rtp }}</div>
+          </a>
+        </sc-for>
+      </div>
+      <div class="games-more">
+        <a class="btn btn-outline" href="{{ gamesPageLink }}" target="_blank" rel="noopener">Browse all games →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec reveal">
+    <div class="dt-wrap">
+      <a class="optease" href="{{ operatorsPageLink }}">
+        <div class="optease-copy">
+          <span class="eyebrow">Top-Rated Operators</span>
+          <h2>Find Your Best Match</h2>
+          <p>Compare trusted operators, exclusive offers, player ratings and withdrawal experience.</p>
+        </div>
+        <div class="optease-logos">
+          <sc-for list="{{ featuredOperators }}" as="op" hint-placeholder-count="3">
+            <div class="optile"><img src="{{ op.file }}" alt="{{ op.name }}"></div>
+          </sc-for>
+          <span class="opmore">+ More</span>
+        </div>
+        <div class="optease-foot">
+          <span class="btn btn-primary">View All Operators →</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <section class="sec reveal" style="padding-top:0">
+    <div class="dt-wrap">
+      <div class="sechead"><div><span class="eyebrow">Strategy</span><h2>Tips to Place Well</h2></div></div>
+      <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px;max-width:640px">
+        <li style="display:flex;gap:12px;align-items:baseline;font-family:var(--mono);font-size:14px;color:var(--mute);line-height:1.5"><span style="color:var(--accent)">→</span>Play early and often — points accumulate over the full series, so consistency beats a single big session.</li>
+        <li style="display:flex;gap:12px;align-items:baseline;font-family:var(--mono);font-size:14px;color:var(--mute);line-height:1.5"><span style="color:var(--accent)">→</span>Check the leaderboard cutoff for paying positions before you stop playing for the day.</li>
+        <li style="display:flex;gap:12px;align-items:baseline;font-family:var(--mono);font-size:14px;color:var(--mute);line-height:1.5"><span style="color:var(--accent)">→</span>Focus wagers on tournament-eligible games listed in the Series to make sure every spin counts.</li>
+        <li style="display:flex;gap:12px;align-items:baseline;font-family:var(--mono);font-size:14px;color:var(--mute);line-height:1.5"><span style="color:var(--accent)">→</span>Set a budget per session — the tournament rewards steady play, not chasing losses.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sec reveal" id="faq">
+    <div class="dt-wrap">
+      <div class="faq-card">
+        <div class="faq-head">Frequently Asked Questions (FAQ)</div>
+        <sc-for list="{{ faqs }}" as="f" hint-placeholder-count="4">
+          <div class="faq-item {{ f.cls }}">
+            <button class="faq-q" onClick="{{ f.onToggle }}">{{ f.q }}<span class="ic">⌄</span></button>
+            <div class="faq-a"><p>{{ f.a }}</p></div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section class="sponsor-strip">
+    <div class="sponsor-line"></div>
+    <div class="sponsor-row">
+      <img class="sponsor-logo" src="assets/gaming-labs-certified.png" alt="Gaming Labs Certified RNG">
+      <img class="sponsor-logo" src="assets/bmm-testlabs.png" alt="BMM Testlabs">
+      <img class="sponsor-logo" src="assets/gcb-cert.avif" alt="GCB Certified">
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="dt-wrap">
+      <div class="foot-top">
+        <a href="{{ siteHomeLink }}"><img class="dt-logo" src="assets/advantplay-logo-horizontal.png" alt="AdvantPlay"></a>
+        <div class="foot-badges">
+          <span class="fbadge">18+</span>
+          <span class="fbadge">SSL Secured</span>
+          <span class="fbadge">Licensed</span>
+          <span class="fbadge">Play Responsibly</span>
+        </div>
+        <div class="foot-social">
+          <a class="fsoc" href="https://www.facebook.com/advantplayofficial" target="_blank" rel="noopener" aria-label="Facebook">FB</a>
+          <a class="fsoc" href="https://www.instagram.com/advantplay" target="_blank" rel="noopener" aria-label="Instagram">IG</a>
+          <a class="fsoc" href="{{ tgJoinLink }}" target="_blank" rel="noopener" aria-label="Telegram">TG</a>
+          <a class="fsoc" href="https://x.com/AdvantPlayHQ" target="_blank" rel="noopener" aria-label="X">X</a>
+          <a class="fsoc" href="https://www.youtube.com/@advantplay1354" target="_blank" rel="noopener" aria-label="YouTube">YT</a>
+        </div>
+      </div>
+      <div class="foot-fine">
+        <span class="cc">© 2026 AdvantPlay. All rights reserved.</span>
+        Terms apply. Certain game types may be excluded from wager count. Tournament standings are final at series close. Gambling can be addictive — play responsibly.
+      </div>
+    </div>
+  </footer>
+
+  <div class="sticky {{ stickyClass }}">
+    <a class="btn btn-primary" href="https://t.me/+YIl5i78SzhUzNDc1" target="_blank" rel="noopener">Open August Series in Telegram →</a>
+  </div>
+
+  <sc-if value="{{ selectedSeries }}" hint-placeholder-val="{{ false }}">
+    <div class="overlay" onClick="{{ closeModalBackdrop }}">
+      <div class="modal" onClick="{{ stop }}">
+        <div class="modal-art">
+          <img src="assets/dragon-key-art.jpg" alt="{{ selectedSeries.name }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
+          <div class="grad"></div>
+          <button class="modal-close" onClick="{{ closeModal }}">✕</button>
+        </div>
+        <div class="modal-body">
+          <span class="scard-badge {{ selectedSeries.badgeCls }}" style="position:static;display:inline-flex;margin-bottom:10px"><sc-if value="{{ selectedSeries.isLive }}" hint-placeholder-val="{{ false }}"><span class="livedot" style="width:6px;height:6px"></span></sc-if>{{ selectedSeries.statusLabel }}</span>
+          <h3>{{ selectedSeries.name }}</h3>
+          <div class="modal-meta"><span>{{ selectedSeries.dateRange }}</span><span>·</span><span>Series {{ selectedSeries.num }}</span></div>
+          <div class="modal-pool">
+            <div class="big"><span class="k">Prize pool</span>{{ selectedSeries.prizePool }}</div>
+            <sc-for list="{{ selectedSeries.prizeTiers }}" as="tier" hint-placeholder-count="4">
+              <div class="tier"><span class="rk">{{ tier.rank }}</span><span class="amt">{{ tier.amount }}</span></div>
+            </sc-for>
+          </div>
+          <div class="rule">
+            <span class="ico">▸</span>
+            <p>Every <b>MYR {{ selectedSeries.entryThreshold }}</b> wagered = <b>1 leaderboard point</b>. Points accrue automatically across all qualifying games for the full series window.</p>
+          </div>
+          <a class="btn btn-primary modal-cta" href="{{ tgLink }}" target="_blank" rel="noopener">Join via Telegram →</a>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const TG_LINK = "https://t.me/advantplay";
+const TG_JOIN_LINK = "https://t.me/advantplayofficial";
+const GAMES_PAGE_LINK = "https://advantplay-preview.netlify.app/our-games.html";
+const OPERATORS_PAGE_LINK = "https://advantplay-preview.netlify.app/bonus.html";
+const LIVE_WINS_PAGE_LINK = "https://advantplay-preview.netlify.app/index.html";
+const SITE_HOME_LINK = "https://advantplay-preview.netlify.app/index.html";
+
+const SERIES = [
+  { id:"s1", num:"01", name:"Ember Hoard", dateRange:"Aug 1 – Aug 5", status:"live",     prizePool:"MYR 40,000", entryThreshold:50, thumb:null,
+    prizeTiers:[{rank:"1st place",amount:"MYR 16,000"},{rank:"2nd place",amount:"MYR 9,000"},{rank:"3rd place",amount:"MYR 5,000"},{rank:"4th – 10th",amount:"MYR 10,000"}] },
+  { id:"s2", num:"02", name:"Jade Scale", dateRange:"Aug 6 – Aug 10", status:"live",     prizePool:"MYR 35,000", entryThreshold:50, thumb:null,
+    prizeTiers:[{rank:"1st place",amount:"MYR 14,000"},{rank:"2nd place",amount:"MYR 8,000"},{rank:"3rd place",amount:"MYR 4,500"},{rank:"4th – 10th",amount:"MYR 8,500"}] },
+  { id:"s3", num:"03", name:"Golden Talon", dateRange:"Aug 11 – Aug 15", status:"live",   prizePool:"MYR 38,000", entryThreshold:50, thumb:null,
+    prizeTiers:[{rank:"1st place",amount:"MYR 15,000"},{rank:"2nd place",amount:"MYR 8,500"},{rank:"3rd place",amount:"MYR 5,000"},{rank:"4th – 10th",amount:"MYR 9,500"}] },
+  { id:"s4", num:"04", name:"Crimson Wyrm", dateRange:"Aug 16 – Aug 20", status:"upcoming", prizePool:"MYR 42,000", entryThreshold:50, thumb:null,
+    prizeTiers:[{rank:"1st place",amount:"MYR 17,000"},{rank:"2nd place",amount:"MYR 9,500"},{rank:"3rd place",amount:"MYR 5,500"},{rank:"4th – 10th",amount:"MYR 10,000"}] },
+  { id:"s5", num:"05", name:"Ivory Fang", dateRange:"Aug 21 – Aug 25", status:"upcoming", prizePool:"MYR 30,000", entryThreshold:50, thumb:null,
+    prizeTiers:[{rank:"1st place",amount:"MYR 12,000"},{rank:"2nd place",amount:"MYR 7,000"},{rank:"3rd place",amount:"MYR 4,000"},{rank:"4th – 10th",amount:"MYR 7,000"}] },
+  { id:"s6", num:"06", name:"Obsidian Coil", dateRange:"Aug 26 – Aug 30", status:"upcoming", prizePool:"MYR 45,000", entryThreshold:50, thumb:null,
+    prizeTiers:[{rank:"1st place",amount:"MYR 18,000"},{rank:"2nd place",amount:"MYR 10,000"},{rank:"3rd place",amount:"MYR 6,000"},{rank:"4th – 10th",amount:"MYR 11,000"}] },
+  { id:"s7", num:"07", name:"Storm Serpent", dateRange:"Jul 27 – Jul 31", status:"ended",  prizePool:"MYR 20,000", entryThreshold:50, thumb:null,
+    prizeTiers:[{rank:"1st place",amount:"MYR 8,000"},{rank:"2nd place",amount:"MYR 4,500"},{rank:"3rd place",amount:"MYR 2,500"},{rank:"4th – 10th",amount:"MYR 5,000"}] },
+];
+
+const TICKER = [
+  { who:"A. K.",  meta:" climbed to #2",           sr:"Series 03" },
+  { who:"J. Tan", meta:" won MYR 3,200",           sr:"Series 07" },
+  { who:"M. R.",  meta:" climbed to #1",           sr:"Series 01" },
+  { who:"S. L.",  meta:" wagered MYR 12,400",      sr:"Series 02" },
+  { who:"D. Wong",meta:" won MYR 1,800",           sr:"Series 07" },
+  { who:"H. P.",  meta:" entered the leaderboard", sr:"Series 03" },
+  { who:"C. Y.",  meta:" climbed to #4",           sr:"Series 01" },
+  { who:"R. S.",  meta:" won MYR 5,000",           sr:"Series 07" },
+  { who:"N. Lim", meta:" climbed to #3",           sr:"Series 02" },
+];
+
+const PROVIDERS = [
+  { name:"Nova88",   file:"assets/partner-nova88.png" },
+  { name:"Me88",     file:"assets/partner-me88.webp" },
+  { name:"BK8",      file:"assets/partner-bk8.webp" },
+  { name:"MD88",     file:"assets/partner-md88-transparent.png" },
+  { name:"12Play",   file:"assets/partner-12play-transparent.png" },
+  { name:"Maxim88",  file:"assets/partner-maxim88-transparent.png" },
+];
+
+const FAQS = [
+  { q:"What is a tournament?", a:"Tournaments are time-limited events where players compete for the highest scores, with prizes at stake. Each tournament features one of our slot games, offering players a set number of free spins at a fixed bet size. A player's total winnings determine their position on the leaderboard." },
+  { q:"How can I win a prize?", a:"Prizes are listed on the tournament page, along with the required placement to win each one. While top scorers are typically guaranteed the best prizes, there are often additional prizes for players who have used all their spins. Depending on the tournament, players with the lowest scores or randomly selected non-top scorers may also win prizes. We encourage players to use all their free spins, as a lucky last spin with a max win could secure a top leaderboard spot. Even if not, there's always a chance to be randomly selected for a prize." },
+  { q:"Who can join?", a:"All registered users can join tournaments for free. However, certain regions may be blocked or restricted." },
+  { q:"How are prizes sent to winners?", a:"Winners will receive their voucher through Campaign Rewards in the AdvantPlay Telegram Mini App." },
+  { q:"What can I find in the terms & conditions?", a:"You can find the full rules for eligibility, scoring, tie-breaks and prize delivery in our terms & conditions." },
+];
+
+// ---------------------------------------------------------------------------
+// Big Hits — mock data source, shaped to match the future live-wins API.
+// Each record: { id, gameName, gameThumbnail, winType, amount, currency,
+//                 occurredAt (ISO string), playerAlias (masked), status }
+// `gameThumbnail` is intentionally left null here for entries that should
+// fall back to a resolved game thumbnail (see FALLBACK_THUMB / resolveThumb).
+// ---------------------------------------------------------------------------
+const now = Date.now();
+const BIG_HITS_MOCK = [
+  { id:"win_1", gameName:"Fantastic Beast",         gameThumbnail:null, winType:"BIG WIN",  amount:12480, currency:"MYR", occurredAt:new Date(now - 2  * 60000).toISOString(), playerAlias:"Player ****21", status:"approved" },
+  { id:"win_2", gameName:"Last Samurai",            gameThumbnail:null, winType:"JACKPOT",  amount:48200, currency:"MYR", occurredAt:new Date(now - 5  * 60000).toISOString(), playerAlias:"Player ****07", status:"approved" },
+  { id:"win_3", gameName:"Aztec: Bonus Hunt 2",      gameThumbnail:null, winType:"MEGA WIN", amount:24900, currency:"MYR", occurredAt:new Date(now - 9  * 60000).toISOString(), playerAlias:"Player ****45", status:"approved" },
+  { id:"win_4", gameName:"Maya: Elemental Totem 2",  gameThumbnail:null, winType:"BIG WIN",  amount:8650,  currency:"MYR", occurredAt:new Date(now - 14 * 60000).toISOString(), playerAlias:"Player ****13", status:"approved" },
+  { id:"win_5", gameName:"Zeustrike",                gameThumbnail:null, winType:"JACKPOT",  amount:31750, currency:"MYR", occurredAt:new Date(now - 21 * 60000).toISOString(), playerAlias:"Player ****88", status:"approved" },
+  { id:"win_6", gameName:"Dragon Chi's Quest 2",     gameThumbnail:null, winType:"MEGA WIN", amount:19300, currency:"MYR", occurredAt:new Date(now - 33 * 60000).toISOString(), playerAlias:"Player ****59", status:"approved" },
+];
+
+const FALLBACK_THUMB = "assets/dragon-key-art.jpg";
+
+// Formats a numeric amount + ISO currency code into display copy, e.g. "MYR 12,480".
+function formatWinAmount(amount, currency){
+  return currency + " " + Math.round(amount).toLocaleString("en-US");
+}
+
+// Formats an ISO timestamp into "X min ago" relative copy for the card footer.
+function formatRelativeTime(isoString){
+  const mins = Math.max(0, Math.round((Date.now() - new Date(isoString).getTime()) / 60000));
+  return mins + " min ago";
+}
+
+// Resolves the thumbnail to show: API-provided image if present, else a
+// name-matched hot-game thumbnail, else the generic fallback art.
+function resolveThumb(gameThumbnail, gameName, hotGames){
+  if(gameThumbnail) return gameThumbnail;
+  const match = hotGames.find(g => g.name === gameName);
+  return (match && match.thumb) || FALLBACK_THUMB;
+}
+
+const GAMES = [
+  { name:"Aztec: Bonus Hunt 2",     rtp:"97.01%", thumb:"assets/game-aztec-bonus-hunt-2.png" },
+  { name:"Book of Safari",          rtp:"97.05%", thumb:"assets/game-book-of-safari.png" },
+  { name:"Dragon Chi's Quest 2",    rtp:"97.01%", thumb:"assets/game-dragon-chis-quest-2.png" },
+  { name:"Fantastic Beast",         rtp:"96.06%", thumb:"assets/game-fantastic-beast.png" },
+  { name:"Last Samurai",            rtp:"97.27%", thumb:"assets/game-last-samurai.png" },
+  { name:"Maya: Elemental Totem 2", rtp:"97.08%", thumb:"assets/game-maya-elemental-totem-2.png" },
+  { name:"Royal Ace",               rtp:"96.99%", thumb:"assets/game-royal-ace.png" },
+  { name:"Zeustrike",               rtp:"97.10%", thumb:"assets/game-zeustrike.png" },
+];
+
+class Component extends DCLogic {
+  state = {
+    scrolled:false, showSticky:false, activeTab:"live",
+    selectedId:null, openFaq:null, voucherSecsLeft:600
+  };
+
+  componentDidMount(){
+    // randomly assign a hot-game (name + art) to each mock win that has no
+    // thumbnail of its own, stable for this session. Purely a mock-data nicety —
+    // a live API response would already carry its own gameThumbnail per record.
+    const pool = [...GAMES];
+    this._winGames = BIG_HITS_MOCK.map(() => {
+      if(pool.length === 0) pool.push(...GAMES);
+      const i = Math.floor(Math.random() * pool.length);
+      return pool.splice(i, 1)[0];
+    });
+
+    this._onScroll = () => {
+      const y = window.scrollY || window.pageYOffset;
+      this.setState({ scrolled: y > 8, showSticky: y > 500 });
+    };
+    window.addEventListener("scroll", this._onScroll, { passive:true });
+
+    this._voucherTimer = setInterval(() => {
+      this.setState(st => ({ voucherSecsLeft: st.voucherSecsLeft > 0 ? st.voucherSecsLeft - 1 : 600 }));
+    }, 1000);
+
+    // reveal-on-scroll with safety fallback
+    const nodes = Array.from(document.querySelectorAll(".reveal"));
+    if ("IntersectionObserver" in window) {
+      this._io = new IntersectionObserver((entries)=>{
+        entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add("in"); this._io.unobserve(e.target); } });
+      }, { threshold:0.12, rootMargin:"0px 0px -8% 0px" });
+      nodes.forEach(n=>this._io.observe(n));
+      this._safety = setTimeout(()=>nodes.forEach(n=>n.classList.add("in")), 2200);
+    } else {
+      nodes.forEach(n=>n.classList.add("in"));
+    }
+  }
+  componentWillUnmount(){
+    window.removeEventListener("scroll", this._onScroll);
+    if(this._io) this._io.disconnect();
+    if(this._safety) clearTimeout(this._safety);
+    if(this._voucherTimer) clearInterval(this._voucherTimer);
+  }
+
+  formatVoucherCountdown(secs){
+    const m = Math.floor(secs / 60);
+    const s = secs % 60;
+    return m + ":" + String(s).padStart(2, "0");
+  }
+
+  daysRemaining(){
+    const end = new Date(2026, 7, 31); // Aug 31 2026
+    const now = new Date();
+    const d = Math.ceil((end - now) / 86400000);
+    return d > 0 ? d : 0;
+  }
+
+  statusMeta(status){
+    if(status==="live") return { label:"Live", cls:"b-live" };
+    if(status==="upcoming") return { label:"Upcoming", cls:"b-upcoming" };
+    return { label:"Ended", cls:"b-ended" };
+  }
+
+  renderVals(){
+    const { activeTab, selectedId, openFaq } = this.state;
+
+    const tabDefs = [
+      { key:"live", label:"Live" },
+      { key:"upcoming", label:"Upcoming" },
+      { key:"ended", label:"Ended" },
+    ];
+    const tabs = tabDefs.map(t => ({
+      label:t.label,
+      count: SERIES.filter(s=>s.status===t.key).length,
+      cls: activeTab===t.key ? "active" : "",
+      onClick: () => this.setState({ activeTab:t.key })
+    }));
+
+    const decorate = (s) => {
+      const m = this.statusMeta(s.status);
+      return { ...s, shortName:"Series "+s.num+" · "+s.name, statusLabel:m.label, badgeCls:m.cls,
+        isLive:s.status==="live", noThumb:!s.thumb,
+        onOpen: () => this.setState({ selectedId:s.id }) };
+    };
+
+    const filteredSeries = SERIES.filter(s=>s.status===activeTab).map(decorate);
+    const isEmpty = filteredSeries.length===0;
+
+    const selRaw = SERIES.find(s=>s.id===selectedId) || null;
+    const selectedSeries = selRaw ? decorate(selRaw) : null;
+
+    const tickerLoop = TICKER.concat(TICKER);
+
+    // ---------------------------------------------------------------------
+    // FUTURE API INTEGRATION POINT
+    // Replace BIG_HITS_MOCK below with the live feed of recent verified wins,
+    // e.g. state populated by a fetch('/api/wins/recent') poll or a
+    // websocket/SSE subscription. Keep records newest-first, only
+    // "approved"/public-safe entries, and player identity masked or omitted —
+    // the mapping + render logic beneath needs no changes when that lands.
+    // ---------------------------------------------------------------------
+    const winRecords = [...BIG_HITS_MOCK]
+      .filter(w => w.status === "approved")
+      .sort((a,b) => new Date(b.occurredAt) - new Date(a.occurredAt));
+
+    const wins = winRecords.map((w,i) => {
+      const fallbackGame = (this._winGames && this._winGames[i]) || GAMES[i % GAMES.length];
+      return {
+        id: w.id,
+        tag: w.winType,
+        game: w.gameName,
+        thumb: resolveThumb(w.gameThumbnail, w.gameName, GAMES) || fallbackGame.thumb,
+        amount: formatWinAmount(w.amount, w.currency),
+        timeAgo: formatRelativeTime(w.occurredAt),
+      };
+    });
+    const games = GAMES;
+
+    const faqs = FAQS.map((f,i)=>({ q:f.q, a:f.a, cls: openFaq===i ? "open" : "",
+      onToggle: () => this.setState(st => ({ openFaq: st.openFaq===i ? null : i })) }));
+
+    return {
+      tgLink: TG_LINK,
+      tgJoinLink: TG_JOIN_LINK,
+      gamesPageLink: GAMES_PAGE_LINK,
+      siteHomeLink: SITE_HOME_LINK,
+      navClass: this.state.scrolled ? "scrolled" : "",
+      stickyClass: this.state.showSticky ? "show" : "",
+      daysRemaining: this.daysRemaining(),
+      voucherCountdown: this.formatVoucherCountdown(this.state.voucherSecsLeft),
+      scrollToSeries: () => { const el=document.getElementById("series"); if(el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 60, behavior:"smooth" }); },
+      navScrollTo: (id) => (e) => { e.preventDefault(); const el=document.getElementById(id); if(el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 60, behavior:"smooth" }); },
+      tabs, filteredSeries, isEmpty,
+      selectedSeries,
+      closeModal: () => this.setState({ selectedId:null }),
+      closeModalBackdrop: () => this.setState({ selectedId:null }),
+      stop: (e) => { e.stopPropagation(); },
+      tickerLoop,
+      liveWinsPageLink: LIVE_WINS_PAGE_LINK,
+      featuredWins: wins.slice(0,3),
+      wins, games,
+      operatorsPageLink: OPERATORS_PAGE_LINK,
+      featuredOperators: PROVIDERS.slice(0,3), faqs,
+    };
+  }
+}
+</script>
+</body>
+</html>
