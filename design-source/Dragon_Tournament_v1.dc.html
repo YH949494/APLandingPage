@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet data-dc-atomics="">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<script src="./image-slot.js"></script>
+<style>
+:root{
+  --bg:#0c0c0c;--surface:#161616;--surface-2:#1d1d1d;--text:#f5f5f5;--mute:#8a8a8a;
+  --line:rgba(245,245,245,0.10);--line-2:rgba(245,245,245,0.06);
+  --accent:#ff5e00;--accent-dim:rgba(255,94,0,0.12);--accent-glow:rgba(255,94,0,0.35);
+  --gold:#ffc542;--silver:#c9d2da;--bronze:#d99a5b;
+  --good:#3ddc84;--good-dim:rgba(61,220,132,.12);
+  --display:"Poppins",system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,monospace;--body:"Poppins",system-ui,sans-serif;
+  --radius-sm:8px;--radius-md:14px;--radius-lg:22px;--radius-pill:999px;
+  --maxw:1200px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--body);-webkit-font-smoothing:antialiased;overflow-x:hidden;text-wrap:pretty}
+a{color:var(--accent);text-decoration:none}
+a:hover{color:#ff7a2e}
+img{display:block;max-width:100%}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+::-webkit-scrollbar{height:0;width:0}
+.dt-page{position:relative;width:100%;overflow:hidden}
+.dt-wrap{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+.mono{font-family:var(--mono)}
+
+.dt-nav{position:sticky;top:0;z-index:60;width:100%;transition:background .3s,border-color .3s;border-bottom:1px solid transparent}
+.dt-nav.scrolled{background:rgba(12,12,12,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.dt-nav-in{max-width:var(--maxw);margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:16px}
+.dt-logo{width:auto;height:auto;max-height:26px;object-fit:contain}
+.dt-nav-links{display:none;margin-left:auto;gap:22px}
+.dt-nav-links a{color:var(--mute);font-size:12.5px;font-weight:500;letter-spacing:.01em;transition:color .18s;white-space:nowrap}
+.dt-nav-links a:hover{color:var(--text)}
+.dt-nav-cta{margin-left:auto;white-space:nowrap}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--display);font-weight:700;border-radius:var(--radius-pill);transition:transform .18s cubic-bezier(.2,.7,.3,1),background .2s,box-shadow .2s;line-height:1}
+.btn:active{transform:scale(.96)}
+.btn-primary{background:var(--accent);color:#0c0c0c;padding:14px 22px;font-size:15px;box-shadow:0 6px 24px -8px var(--accent-glow)}
+.btn-primary:hover{background:#ff7223;transform:translateY(-2px);box-shadow:0 12px 34px -8px var(--accent-glow);color:#0c0c0c}
+.btn-outline{background:transparent;color:var(--text);border:1px solid var(--line);padding:12px 20px;font-size:14px;font-weight:600}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
+.btn-sm{padding:9px 16px;font-size:13px}
+.btn-block{width:100%}
+
+.eyebrow{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+.tagpill{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:5px 11px;border-radius:var(--radius-pill);display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.tagpill.live{background:var(--accent);color:#0c0c0c}
+.livedot{width:6px;height:6px;border-radius:50%;background:#0c0c0c;flex:0 0 auto;animation:pulse 1.4s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+
+.sec{padding:52px 0}
+.sechead{margin-bottom:24px;max-width:60ch}
+.sechead h2{font-family:var(--display);font-weight:800;font-size:25px;letter-spacing:-.02em;margin:8px 0 0;line-height:1.1}
+.sechead p{font-family:var(--body);font-size:13.5px;color:var(--mute);margin:10px 0 0;line-height:1.55}
+
+/* hero */
+.hero{position:relative;overflow:hidden;min-height:560px;display:flex;align-items:center}
+.hero-bg{position:absolute;inset:0;z-index:0}
+.hero-bg img{width:100%;height:100%;object-fit:cover;object-position:80% center;display:block}
+.hero-bg-shade{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(12,12,12,.55) 0%,rgba(12,12,12,.8) 40%,rgba(12,12,12,.98) 88%,#0c0c0c 100%)}
+.hero .dt-wrap{position:relative;z-index:1;width:100%}
+.hero-copy{display:flex;flex-direction:column;align-items:flex-start;padding:54px 0 32px}
+.hero h1{font-family:var(--display);font-weight:900;font-size:34px;line-height:1.06;letter-spacing:-.03em;margin:14px 0 0;text-shadow:0 2px 20px rgba(0,0,0,.4)}
+.hero h1 .amt{color:var(--accent)}
+.hero-sub{color:#d6d6d6;font-size:14.5px;line-height:1.6;margin:14px 0 0;max-width:48ch}
+.hero-dates{font-family:var(--mono);font-size:12px;color:#a8a8a8;letter-spacing:.03em;margin:14px 0 0;display:flex;align-items:center;gap:8px}
+
+.countdown{display:flex;gap:8px;margin:20px 0 0}
+.cd-box{background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:var(--radius-md);padding:10px 6px;min-width:62px;text-align:center;backdrop-filter:blur(6px)}
+.cd-box .n{font-family:var(--mono);font-weight:700;font-size:24px;color:var(--accent);letter-spacing:-.02em}
+.cd-box .l{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--mute);margin-top:2px}
+.cd-label{font-family:var(--mono);font-size:10.5px;color:var(--mute);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+
+.hero-ctas{display:flex;flex-direction:column;align-items:stretch;gap:10px;margin:24px 0 0;width:100%;max-width:380px}
+.hero-ctas .btn-primary{padding:17px;font-size:16px}
+.hero-note{font-family:var(--mono);font-size:11px;color:var(--mute);margin-top:12px;max-width:42ch;line-height:1.5}
+
+/* quick facts */
+.statgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.statcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-md);padding:18px 16px}
+.statcard .v{font-family:var(--display);font-weight:800;font-size:20px;letter-spacing:-.02em;color:var(--accent)}
+.statcard .k{font-family:var(--mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--mute);margin-top:6px;line-height:1.4}
+
+/* podium */
+.podium{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+.pcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);padding:20px;display:flex;align-items:center;gap:14px}
+.pcard.p1{border-color:rgba(255,197,66,.4);background:linear-gradient(135deg,rgba(255,197,66,.1),var(--surface) 60%)}
+.pcard.p2{border-color:rgba(201,210,218,.3)}
+.pcard.p3{border-color:rgba(217,154,91,.3)}
+.prank{font-family:var(--display);font-weight:900;font-size:26px;width:44px;text-align:center;flex:0 0 auto}
+.p1 .prank{color:var(--gold)}
+.p2 .prank{color:var(--silver)}
+.p3 .prank{color:var(--bronze)}
+.pinfo{flex:1}
+.pinfo .place{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
+.pinfo .amt{font-family:var(--display);font-weight:800;font-size:19px;margin-top:3px}
+.pinfo .amt.ph{color:var(--mute);font-weight:600;font-size:15px;font-style:italic}
+
+.prizetable{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden}
+.ptrow{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-top:1px solid var(--line-2);gap:12px}
+.ptrow:first-child{border-top:none}
+.ptrow .rk{font-family:var(--mono);font-size:12.5px;color:var(--text)}
+.ptrow .amt{font-family:var(--display);font-weight:700;font-size:14px;color:var(--mute);font-style:italic}
+.prize-callout{font-family:var(--mono);font-size:11.5px;color:var(--good);text-align:center;padding:14px 10px;background:var(--good-dim);border:1px solid rgba(61,220,132,.25);border-radius:var(--radius-md);margin-top:12px}
+
+/* how to join */
+.join-steps{display:flex;flex-direction:column;gap:16px}
+.join-step{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);padding:22px;display:flex;flex-direction:column;gap:10px}
+.join-num{width:38px;height:38px;border-radius:50%;background:var(--accent-dim);border:1px solid rgba(255,94,0,.3);color:var(--accent);font-family:var(--display);font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.join-step h4{font-family:var(--display);font-weight:700;font-size:17px;margin:2px 0 0}
+.join-step p{margin:0;color:var(--mute);font-size:13.5px;line-height:1.55}
+
+/* leaderboard mechanics */
+.mech-grid{display:flex;flex-direction:column;gap:10px}
+.mech-item{display:flex;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-md);padding:14px 16px}
+.mech-num{font-family:var(--display);font-weight:900;font-size:16px;color:var(--accent);width:26px;flex:0 0 auto}
+.mech-item p{margin:0;font-size:13.5px;line-height:1.5}
+.mech-item p b{font-weight:700}
+
+/* leaderboard preview */
+.lb-table{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden}
+.lb-head,.lb-row{display:grid;grid-template-columns:44px 1fr 84px 68px;gap:8px;align-items:center;padding:11px 14px}
+.lb-head{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);border-bottom:1px solid var(--line-2)}
+.lb-row{border-top:1px solid var(--line-2);font-size:12.5px}
+.lb-row:first-child{border-top:none}
+.lb-row .rk{font-family:var(--mono);font-weight:700;color:var(--text)}
+.lb-row.top .rk{color:var(--gold)}
+.lb-row .name{font-family:var(--display);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lb-row .score{font-family:var(--mono);color:var(--mute);text-align:right}
+.lb-zone{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 7px;border-radius:var(--radius-pill);text-align:center;background:rgba(245,245,245,.08);color:var(--mute)}
+.lb-zone.hot{background:var(--accent-dim);color:var(--accent)}
+.lb-note{font-family:var(--mono);font-size:10.5px;color:var(--mute);text-align:center;padding:10px;border-top:1px solid var(--line-2)}
+
+/* why telegram */
+.whygrid{display:grid;grid-template-columns:1fr;gap:12px}
+.whycard{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-md);padding:16px 18px}
+.whycard h4{font-family:var(--display);font-weight:700;font-size:14.5px;margin:0}
+.whycard p{margin:6px 0 0;color:var(--mute);font-size:13px;line-height:1.5}
+
+/* trust */
+.trust-grid{display:flex;flex-direction:column;gap:14px}
+.trust-row{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-md);padding:14px 16px}
+.trust-row img{max-height:26px;width:auto;object-fit:contain}
+.trust-notice{font-family:var(--mono);font-size:11px;color:var(--mute);line-height:1.6;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-md);padding:14px 16px}
+.trust-notice b{color:var(--text)}
+
+/* faq */
+.faq-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden}
+.faq-item{border-bottom:1px solid var(--line-2)}
+.faq-item:last-child{border-bottom:none}
+.faq-q{width:100%;display:flex;align-items:center;justify-content:space-between;gap:14px;text-align:left;padding:16px 20px;font-family:var(--display);font-weight:600;font-size:14px;color:var(--text);transition:background .15s}
+.faq-q:hover{background:var(--line-2)}
+.faq-q .ic{font-family:var(--mono);color:var(--text);font-size:13px;transition:transform .2s;flex:0 0 auto}
+.faq-item.open .faq-q .ic{transform:rotate(180deg)}
+.faq-a{overflow:hidden;max-height:0;transition:max-height .28s ease,opacity .2s;padding:0 20px}
+.faq-item.open .faq-a{max-height:320px;opacity:1;padding-bottom:18px}
+.faq-a p{margin:0;color:var(--mute);font-size:13px;line-height:1.6;max-width:62ch}
+
+/* final cta */
+.finalcta{background:linear-gradient(180deg,var(--surface),var(--surface-2));border:1px solid var(--line);border-radius:var(--radius-lg);padding:34px 24px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:14px}
+.finalcta .v{font-family:var(--display);font-weight:900;font-size:30px;color:var(--accent);letter-spacing:-.02em}
+.finalcta h2{font-family:var(--display);font-weight:800;font-size:23px;margin:0;letter-spacing:-.02em}
+.finalcta p{margin:0;color:var(--mute);font-size:14px;max-width:46ch;line-height:1.55}
+
+/* footer */
+.footer{border-top:1px solid var(--line);padding:32px 0 96px;margin-top:12px}
+.foot-top{display:flex;flex-direction:column;align-items:flex-start;gap:18px}
+.foot-links{display:flex;flex-wrap:wrap;gap:16px;font-family:var(--mono);font-size:12px}
+.foot-links a{color:var(--mute)}
+.foot-links a:hover{color:var(--accent)}
+.foot-badges{display:flex;flex-wrap:wrap;gap:10px}
+.fbadge{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);border:1px solid var(--line);border-radius:var(--radius-sm);padding:6px 10px}
+.foot-fine{margin-top:20px;padding-top:18px;border-top:1px solid var(--line-2);color:var(--mute);font-size:11.5px;line-height:1.65}
+
+/* sticky mobile cta */
+.sticky{position:fixed;left:0;right:0;bottom:0;z-index:80;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:rgba(12,12,12,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line);transform:translateY(120%);transition:transform .34s cubic-bezier(.2,.8,.2,1)}
+.sticky.show{transform:translateY(0)}
+.sticky .btn-primary{width:100%;padding:15px}
+
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s cubic-bezier(.2,.7,.3,1)}
+.reveal.in{opacity:1;transform:none}
+
+@media(min-width:768px){
+  .dt-wrap,.dt-nav-in{padding-left:32px;padding-right:32px}
+  .hero h1{font-size:48px}
+  .hero-sub{font-size:16px;max-width:56ch}
+  .sechead h2{font-size:32px}
+  .statgrid{grid-template-columns:repeat(4,1fr)}
+  .podium{flex-direction:row}
+  .pcard{flex:1;flex-direction:column;text-align:center}
+  .prank{width:auto}
+  .join-steps{flex-direction:row}
+  .join-step{flex:1}
+  .whygrid{grid-template-columns:repeat(2,1fr)}
+  .trust-grid{flex-direction:row}
+  .trust-row{flex:1}
+  .sticky{display:none}
+}
+@media(min-width:1024px){
+  .sec{padding:74px 0}
+  .dt-nav-links{display:flex}
+  .hero{min-height:620px}
+  .hero-bg-shade{background:linear-gradient(to right,rgba(12,12,12,.96) 0%,rgba(12,12,12,.82) 32%,rgba(12,12,12,.4) 58%,rgba(12,12,12,.1) 82%)}
+  .hero-copy{max-width:640px;padding:0}
+  .hero h1{font-size:58px}
+  .sechead h2{font-size:36px}
+  .whygrid{grid-template-columns:repeat(3,1fr)}
+}
+</style>
+</helmet>
+<div class="dt-page">
+
+  <nav class="dt-nav {{ navClass }}">
+    <div class="dt-nav-in">
+      <img class="dt-logo" src="assets/advantplay-logo-horizontal.png" alt="AdvantPlay">
+      <div class="dt-nav-links">
+        <a href="#prizes" onClick="{{ navScrollTo('prizes') }}">Prizes</a>
+        <a href="#how" onClick="{{ navScrollTo('how') }}">How It Works</a>
+        <a href="#leaderboard" onClick="{{ navScrollTo('leaderboard') }}">Leaderboard</a>
+        <a href="#faq" onClick="{{ navScrollTo('faq') }}">FAQ</a>
+      </div>
+      <a class="btn btn-primary btn-sm dt-nav-cta" href="{{ telegramUrl }}" target="_blank" rel="noopener" onClick="{{ onTelegramClick }}">Join Telegram</a>
+    </div>
+  </nav>
+
+  <header class="hero" id="hero">
+    <div class="hero-bg">
+      <img src="assets/dragon-key-art.jpg" alt="{{ tournamentName }}">
+      <div class="hero-bg-shade"></div>
+    </div>
+    <div class="dt-wrap">
+      <div class="hero-copy">
+        <span class="tagpill live"><span class="livedot"></span>Live Tournament</span>
+        <h1>Compete for <span class="amt">MYR {{ totalPrizePoolFmt }}</span></h1>
+        <p class="hero-sub">Play eligible games to increase your eligible turnover and climb the official leaderboard for a share of the prize pool.</p>
+        <p class="hero-dates">{{ campaignRange }} · MYT</p>
+
+        <div>
+          <div class="cd-label">{{ countdownLabel }}</div>
+          <div class="countdown">
+            <div class="cd-box"><div class="n">{{ cd.d }}</div><div class="l">Days</div></div>
+            <div class="cd-box"><div class="n">{{ cd.h }}</div><div class="l">Hrs</div></div>
+            <div class="cd-box"><div class="n">{{ cd.m }}</div><div class="l">Min</div></div>
+            <div class="cd-box"><div class="n">{{ cd.s }}</div><div class="l">Sec</div></div>
+          </div>
+        </div>
+
+        <div class="hero-ctas">
+          <a class="btn btn-primary" href="{{ telegramUrl }}" target="_blank" rel="noopener" onClick="{{ onHeroTelegramClick }}">Join Telegram &amp; Enter Tournament →</a>
+        </div>
+        <p class="hero-note">Get the official tournament link, entry instructions and leaderboard updates.</p>
+      </div>
+    </div>
+  </header>
+
+  <section class="sec reveal {{ revealCls.facts }}" id="facts">
+    <div class="dt-wrap">
+      <div class="statgrid">
+        <div class="statcard"><div class="v">MYR {{ totalPrizePoolFmt }}</div><div class="k">Total Prize Pool</div></div>
+        <div class="statcard"><div class="v">{{ winningPositions }}</div><div class="k">Winning Positions</div></div>
+        <div class="statcard"><div class="v">{{ campaignRange }}</div><div class="k">Tournament Period</div></div>
+        <div class="statcard"><div class="v">Turnover</div><div class="k">Ranking Metric: Eligible Turnover</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec reveal {{ revealCls.prizes }}" id="prizes" style="padding-top:0">
+    <div class="dt-wrap">
+      <div class="sechead"><span class="eyebrow">Prize Breakdown</span><h2>Multiple players win</h2><p>Prizes are rewarded across {{ winningPositions }} leaderboard positions — not only 1st place. Amounts marked as placeholders are editable and pending official confirmation.</p></div>
+
+      <div class="podium">
+        <div class="pcard p2"><div class="prank">2</div><div class="pinfo"><div class="place">2nd Prize</div><div class="amt ph">{{ prizes.p2 }}</div></div></div>
+        <div class="pcard p1"><div class="prank">1</div><div class="pinfo"><div class="place">1st Prize</div><div class="amt ph">{{ prizes.p1 }}</div></div></div>
+        <div class="pcard p3"><div class="prank">3</div><div class="pinfo"><div class="place">3rd Prize</div><div class="amt ph">{{ prizes.p3 }}</div></div></div>
+      </div>
+
+      <div class="prizetable">
+        <div class="ptrow"><span class="rk">4th – 10th place</span><span class="amt">{{ prizes.p4to10 }}</span></div>
+        <div class="ptrow"><span class="rk">11th – {{ winningPositions }} place</span><span class="amt">{{ prizes.remaining }}</span></div>
+      </div>
+      <div class="prize-callout">Full, confirmed prize amounts are published on the official tournament page.</div>
+    </div>
+  </section>
+
+  <section class="sec reveal {{ revealCls.how }}" id="how" style="padding-top:0">
+    <div class="dt-wrap">
+      <div class="sechead"><span class="eyebrow">How to Participate</span><h2>Three steps to compete</h2></div>
+      <div class="join-steps">
+        <div class="join-step"><div class="join-num">1</div><h4>Join AdvantPlay Telegram</h4><p>Receive the official tournament access link, voucher details and campaign updates.</p></div>
+        <div class="join-step"><div class="join-num">2</div><h4>Open the Official Tournament Page</h4><p>Log in or create a player account on the official platform.</p></div>
+        <div class="join-step"><div class="join-num">3</div><h4>Play and Climb the Leaderboard</h4><p>Eligible turnover is tracked automatically during the tournament period.</p></div>
+      </div>
+      <div style="margin-top:20px"><a class="btn btn-primary" href="{{ telegramUrl }}" target="_blank" rel="noopener" onClick="{{ onHowToJoinClick }}">Join Telegram &amp; Enter Tournament →</a></div>
+    </div>
+  </section>
+
+  <section class="sec reveal {{ revealCls.mech }}" id="mechanics" style="padding-top:0">
+    <div class="dt-wrap">
+      <div class="sechead"><span class="eyebrow">Leaderboard</span><h2>How the leaderboard works</h2></div>
+      <div class="mech-grid">
+        <div class="mech-item"><span class="mech-num">1</span><p>Eligible gameplay contributes toward your <b>tournament score</b>.</p></div>
+        <div class="mech-item"><span class="mech-num">2</span><p>Higher <b>eligible turnover</b> produces a higher leaderboard position.</p></div>
+        <div class="mech-item"><span class="mech-num">3</span><p>Check your live ranking on the <b>official tournament page</b>.</p></div>
+        <div class="mech-item"><span class="mech-num">4</span><p>Final results are subject to <b>official verification</b>.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec reveal {{ revealCls.leaderboard }}" id="leaderboard" style="padding-top:0">
+    <div class="dt-wrap">
+      <div class="sechead"><span class="eyebrow">Leaderboard Preview</span><h2>Sample standings</h2><p>Placeholder data for illustration only — check live rankings on the official tournament page.</p></div>
+      <div class="lb-table">
+        <div class="lb-head"><span>Rank</span><span>Player</span><span style="text-align:right">Turnover</span><span>Zone</span></div>
+        <sc-for list="{{ leaderboardRows }}" as="r" hint-placeholder-count="8">
+          <div class="lb-row {{ r.cls }}"><span class="rk">{{ r.rank }}</span><span class="name">{{ r.player }}</span><span class="score">{{ r.score }}</span><span class="lb-zone {{ r.zoneCls }}">{{ r.zone }}</span></div>
+        </sc-for>
+      </div>
+      <div style="margin-top:16px"><a class="btn btn-outline" href="{{ officialUrl }}" target="_blank" rel="noopener" onClick="{{ onLeaderboardOfficialClick }}">View Official Leaderboard →</a></div>
+    </div>
+  </section>
+
+  <section class="sec reveal {{ revealCls.why }}" id="why" style="padding-top:0">
+    <div class="dt-wrap">
+      <div class="sechead"><span class="eyebrow">Telegram</span><h2>Get Tournament Access Through Telegram</h2></div>
+      <div class="whygrid">
+        <sc-for list="{{ whyCards }}" as="w" hint-placeholder-count="6">
+          <div class="whycard"><h4>{{ w.t }}</h4><p>{{ w.d }}</p></div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec reveal {{ revealCls.trust }}" id="trust" style="padding-top:0">
+    <div class="dt-wrap">
+      <div class="sechead"><span class="eyebrow">Trust &amp; Proof</span><h2>Verified and transparent</h2></div>
+      <div class="trust-grid">
+        <div class="trust-row"><img src="assets/advantplay-logo.png" alt="AdvantPlay"></div>
+        <div style="width:100%;max-width:280px"><image-slot id="payout-proof" shape="rounded" radius="14" placeholder="Drop previous winner / payout proof"></image-slot></div>
+      </div>
+      <div class="trust-notice" style="margin-top:12px"><b>18+</b> Only. Gambling can be addictive — play responsibly. <a href="{{ termsUrl }}" target="_blank" rel="noopener">Official Terms &amp; Conditions →</a></div>
+    </div>
+  </section>
+
+  <section class="sec reveal {{ revealCls.faq }}" id="faq" style="padding-top:0">
+    <div class="dt-wrap">
+      <div class="sechead"><span class="eyebrow">FAQ</span><h2>Frequently Asked Questions</h2></div>
+      <div class="faq-card">
+        <sc-for list="{{ faqs }}" as="f" hint-placeholder-count="9">
+          <div class="faq-item {{ f.cls }}">
+            <button class="faq-q" onClick="{{ f.onToggle }}">{{ f.q }}<span class="ic">⌄</span></button>
+            <div class="faq-a"><p>{{ f.a }}</p></div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec reveal {{ revealCls.finalcta }}" id="finalcta" style="padding-top:0">
+    <div class="dt-wrap">
+      <div class="finalcta">
+        <div class="v">MYR {{ totalPrizePoolFmt }}</div>
+        <h2>Prize Pool</h2>
+        <div>
+          <div class="cd-label">{{ countdownLabel }}</div>
+          <div class="countdown">
+            <div class="cd-box"><div class="n">{{ cd.d }}</div><div class="l">Days</div></div>
+            <div class="cd-box"><div class="n">{{ cd.h }}</div><div class="l">Hrs</div></div>
+            <div class="cd-box"><div class="n">{{ cd.m }}</div><div class="l">Min</div></div>
+            <div class="cd-box"><div class="n">{{ cd.s }}</div><div class="l">Sec</div></div>
+          </div>
+        </div>
+        <a class="btn btn-primary" href="{{ telegramUrl }}" target="_blank" rel="noopener" onClick="{{ onFinalTelegramClick }}">Join Telegram &amp; Start Competing →</a>
+        <p>Get the official access link and tournament instructions inside Telegram.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="dt-wrap">
+      <div class="foot-top">
+        <img class="dt-logo" src="assets/advantplay-logo-horizontal.png" alt="AdvantPlay">
+        <div class="foot-links">
+          <a href="{{ termsUrl }}" target="_blank" rel="noopener">Official Terms &amp; Conditions</a>
+          <a href="{{ termsUrl }}" target="_blank" rel="noopener">Responsible Gaming</a>
+          <a href="{{ officialUrl }}" target="_blank" rel="noopener">Official Tournament Page</a>
+        </div>
+        <div class="foot-badges">
+          <span class="fbadge">18+</span>
+          <span class="fbadge">Play Responsibly</span>
+        </div>
+      </div>
+      <div class="foot-fine">© 2026 AdvantPlay. All rights reserved. Prizes and schedule subject to the official tournament terms. This page is for information only — registration and gameplay occur on the official tournament platform.</div>
+    </div>
+  </footer>
+
+  <div class="sticky {{ stickyClass }}">
+    <a class="btn btn-primary" href="{{ telegramUrl }}" target="_blank" rel="noopener" onClick="{{ onStickyTelegramClick }}">Join Telegram — Enter Tournament</a>
+  </div>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+
+const CONFIG = {
+  tournamentName: "Dragon Chi's Tournament",
+  totalPrizePool: 250000,
+  winningPositions: 100,
+  startDate: "2026-08-01T00:00:00+08:00",
+  endDate: "2026-08-31T23:59:59+08:00",
+  campaignRange: "Aug 1 – Aug 31",
+  telegramUrl: "https://t.me/advantplayofficial",
+  officialUrl: "https://advantplay-preview.netlify.app/our-games.html",
+  termsUrl: "https://advantplay-preview.netlify.app/index.html",
+};
+
+const WHY_CARDS = [
+  { t:"Official tournament access", d:"Get the official tournament link needed to join." },
+  { t:"Voucher / entry instructions", d:"Receive voucher codes and step-by-step entry details." },
+  { t:"Tournament reminders", d:"Know when the tournament starts, ends and key deadlines." },
+  { t:"Leaderboard updates", d:"Follow ranking movements throughout the tournament period." },
+  { t:"Winner announcements", d:"See confirmed winners and prize crediting updates." },
+  { t:"Exclusive future campaigns", d:"Early access to upcoming tournaments and promotions." },
+];
+
+const FAQS = [
+  { q:"Is the tournament free to join?", a:"[Placeholder — confirm entry cost/conditions.] Entry details are shared once you join the official Telegram channel." },
+  { q:"Do I need a voucher code?", a:"[Placeholder — confirm if a voucher is required.] Voucher details, if applicable, are shared through Telegram." },
+  { q:"How is my score calculated?", a:"Your score is based on eligible turnover generated during the tournament period, tracked automatically by the official platform." },
+  { q:"Which games are eligible?", a:"[Placeholder — list eligible games.] The full eligible-game list is published on the official tournament page." },
+  { q:"How do I check my leaderboard position?", a:"Your live ranking can be checked on the official tournament page after logging in." },
+  { q:"When are prizes credited?", a:"[Placeholder — confirm crediting timeline.] Timing is announced through Telegram and the official tournament page." },
+  { q:"Can existing players participate?", a:"[Placeholder — confirm eligibility for existing players.]" },
+  { q:"What happens when players have the same score?", a:"[Placeholder — confirm tie-breaking rule.] Tie-breaking rules are defined in the official tournament terms." },
+  { q:"Where can I read the complete tournament rules?", a:"The complete, official rules are linked in the Trust &amp; Proof section and the footer." },
+];
+
+const LEADERBOARD_SAMPLE = [
+  { rank:"1", player:"Dr***nR7", score:"482,900", zone:"Top 3" },
+  { rank:"2", player:"Lu***kyM", score:"461,250", zone:"Top 3" },
+  { rank:"3", player:"Ph***nix9", score:"438,700", zone:"Top 3" },
+  { rank:"4", player:"Ka***iZen", score:"402,100", zone:"Top 10" },
+  { rank:"7", player:"To***nado", score:"355,600", zone:"Top 10" },
+  { rank:"18", player:"Ne***nBolt", score:"298,400", zone:"Top 100" },
+  { rank:"52", player:"Sk***rider", score:"210,800", zone:"Top 100" },
+  { rank:"97", player:"Vi***perX", score:"151,300", zone:"Top 100" },
+];
+
+function fmt(n){ return Math.round(n).toLocaleString("en-US"); }
+function pad(n){ return String(n).padStart(2,"0"); }
+
+function withUtm(url){
+  try{
+    const search = window.location.search;
+    if(!search) return url;
+    const u = new URL(url);
+    const params = new URLSearchParams(search);
+    params.forEach((v,k)=>{ if(k.toLowerCase().startsWith("utm_")||k==="ad_id"||k==="adset_id"||k==="creative_id") u.searchParams.set(k,v); });
+    return u.toString();
+  }catch(e){ return url; }
+}
+
+function trackEvent(name, params){
+  try{
+    if(window.dataLayer) window.dataLayer.push({ event:name, ...params });
+    if(window.fbq) window.fbq("trackCustom", name, params);
+    if(window.ttq) window.ttq.track(name, params);
+  }catch(e){}
+}
+
+class Component extends DCLogic {
+  state = { scrolled:false, showSticky:false, openFaq:null, revealed:{}, now: Date.now() };
+
+  componentDidMount(){
+    trackEvent("landing_page_view", {});
+    this._onScroll = () => {
+      const y = window.scrollY || window.pageYOffset;
+      this.setState({ scrolled: y > 8, showSticky: y > 480 });
+    };
+    window.addEventListener("scroll", this._onScroll, { passive:true });
+    this._timer = setInterval(() => this.setState({ now: Date.now() }), 1000);
+
+    const revealIds = ["facts","prizes","how","mechanics","leaderboard","why","trust","faq","finalcta"];
+    const nodes = revealIds.map(id=>document.getElementById(id)).filter(Boolean);
+    if ("IntersectionObserver" in window) {
+      this._io = new IntersectionObserver((entries)=>{
+        entries.forEach(e=>{
+          if(e.isIntersecting){
+            const id = e.target.id;
+            this.setState(s=>({ revealed:{ ...s.revealed, [id]:true } }));
+            this._io.unobserve(e.target);
+          }
+        });
+      }, { threshold:0.1, rootMargin:"0px 0px -8% 0px" });
+      nodes.forEach(n=>this._io.observe(n));
+      this._safety = setTimeout(()=>{
+        this.setState(s=>({ revealed: revealIds.reduce((acc,id)=>({...acc,[id]:true}), {...s.revealed}) }));
+      }, 2200);
+    } else {
+      this.setState({ revealed: revealIds.reduce((acc,id)=>({...acc,[id]:true}), {}) });
+    }
+  }
+  componentWillUnmount(){
+    window.removeEventListener("scroll", this._onScroll);
+    if(this._io) this._io.disconnect();
+    if(this._safety) clearTimeout(this._safety);
+    if(this._timer) clearInterval(this._timer);
+  }
+
+  renderVals(){
+    const { openFaq, now } = this.state;
+    const telegramUrl = withUtm(CONFIG.telegramUrl);
+    const officialUrl = withUtm(CONFIG.officialUrl);
+
+    const start = new Date(CONFIG.startDate).getTime();
+    const end = new Date(CONFIG.endDate).getTime();
+    const isLive = now >= start && now < end;
+    const target = now < start ? start : end;
+    let diff = Math.max(0, target - now);
+    const d = Math.floor(diff / 86400000); diff -= d*86400000;
+    const h = Math.floor(diff / 3600000); diff -= h*3600000;
+    const m = Math.floor(diff / 60000); diff -= m*60000;
+    const s = Math.floor(diff / 1000);
+    const countdownLabel = now >= end ? "Tournament has ended" : isLive ? "Tournament ends in" : "Tournament starts in";
+
+    const onTelegramClick = () => trackEvent("telegram_cta_click", {});
+    const onHeroTelegramClick = () => trackEvent("hero_telegram_click", {});
+    const onHowToJoinClick = () => trackEvent("how_to_join_telegram_click", {});
+    const onLeaderboardOfficialClick = () => trackEvent("leaderboard_official_click", {});
+    const onFinalTelegramClick = () => trackEvent("final_telegram_click", {});
+    const onStickyTelegramClick = () => trackEvent("sticky_mobile_telegram_click", {});
+
+    const scrollTo = (id) => { const el=document.getElementById(id); if(el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 60, behavior:"smooth" }); };
+
+    const faqs = FAQS.map((f,i)=>({ q:f.q, a:f.a, cls: openFaq===i ? "open" : "", onToggle: () => this.setState(st => ({ openFaq: st.openFaq===i ? null : i })) }));
+
+    const leaderboardRows = LEADERBOARD_SAMPLE.map(r => ({ ...r, cls: Number(r.rank)<=3 ? "top" : "", zoneCls: r.zone==="Top 3"||r.zone==="Top 10" ? "hot" : "" }));
+
+    return {
+      tournamentName: CONFIG.tournamentName,
+      totalPrizePoolFmt: fmt(CONFIG.totalPrizePool),
+      winningPositions: CONFIG.winningPositions,
+      campaignRange: CONFIG.campaignRange,
+      telegramUrl, officialUrl, termsUrl: CONFIG.termsUrl,
+      onTelegramClick, onHeroTelegramClick, onHowToJoinClick, onLeaderboardOfficialClick, onFinalTelegramClick, onStickyTelegramClick,
+      navClass: this.state.scrolled ? "scrolled" : "", stickyClass: this.state.showSticky ? "show" : "",
+      navScrollTo: (id) => (e) => { e.preventDefault(); scrollTo(id); },
+      cd: { d: pad(d), h: pad(h), m: pad(m), s: pad(s) },
+      countdownLabel,
+      revealCls: ["facts","prizes","how","mechanics","leaderboard","why","trust","faq","finalcta"]
+        .reduce((acc,id)=>({ ...acc, [id]: this.state.revealed[id] ? "in" : "" }), {}),
+      whyCards: WHY_CARDS,
+      faqs,
+      leaderboardRows,
+      prizes: {
+        p1: "Enter 1st prize amount",
+        p2: "Enter 2nd prize amount",
+        p3: "Enter 3rd prize amount",
+        p4to10: "Enter per-position amount",
+        remaining: "Enter per-position amount",
+      },
+    };
+  }
+}
+
+</script>
+</body>
+</html>

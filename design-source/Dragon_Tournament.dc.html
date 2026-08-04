@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet data-dc-atomics="">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<script src="./image-slot.js"></script>
+<style>
+:root{
+  --bg:#0a0d13;--surface:rgba(255,255,255,.045);--surface-strong:rgba(255,255,255,.07);
+  --text:#f7f6f2;--mute:#a6acb8;
+  --line:rgba(255,255,255,.10);--line-2:rgba(255,255,255,.06);
+  --accent:#ff5e00;--accent-2:#ff8a3d;--accent-dim:rgba(255,94,0,.14);--accent-glow:rgba(255,110,20,.45);
+  --gold:#ffcf5c;--gold-deep:#c98a1f;--gold-glow:rgba(255,207,92,.35);
+  --sky:#5aa9dc;--sky-deep:#1c4a6e;
+  --silver:#c9d2da;--bronze:#d99a5b;
+  --good:#3ddc84;--good-dim:rgba(61,220,132,.12);
+  --display:"Poppins",system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,monospace;--body:"Poppins",system-ui,sans-serif;
+  --radius-md:14px;--radius-lg:24px;--radius-pill:999px;--maxw:1220px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:radial-gradient(ellipse 1100px 620px at 50% -8%,rgba(90,169,220,.22),transparent 60%),radial-gradient(ellipse 800px 500px at 90% 30%,rgba(255,207,92,.08),transparent 65%),var(--bg);color:var(--text);font-family:var(--body);-webkit-font-smoothing:antialiased;overflow-x:hidden;text-wrap:pretty}
+a{color:var(--accent-2);text-decoration:none}
+a:hover{color:var(--accent)}
+img{display:block;max-width:100%}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+::-webkit-scrollbar{height:0;width:0}
+.dt-page{position:relative;width:100%;overflow:hidden}
+.dt-wrap{max-width:var(--maxw);margin:0 auto;padding:0 20px;position:relative}
+.mono{font-family:var(--mono)}
+.deco{position:absolute;pointer-events:none;z-index:0}
+
+.dt-nav{position:sticky;top:0;z-index:60;width:100%;transition:background .3s,border-color .3s;border-bottom:1px solid transparent}
+.dt-nav.scrolled{background:rgba(10,13,19,.86);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.dt-nav-in{max-width:var(--maxw);margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:16px}
+.dt-logo{max-height:26px;object-fit:contain}
+.dt-nav-links{display:none;margin-left:auto;gap:22px}
+.dt-nav-links a{color:var(--mute);font-size:13px;font-weight:500;white-space:nowrap}
+.dt-nav-links a:hover{color:var(--text)}
+.dt-nav-cta{margin-left:auto;white-space:nowrap}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--display);font-weight:700;border-radius:var(--radius-pill);transition:transform .18s cubic-bezier(.2,.7,.3,1),background .2s,box-shadow .2s;line-height:1}
+.btn:active{transform:scale(.96)}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#180a00;padding:15px 24px;font-size:16px;box-shadow:0 8px 28px -6px var(--accent-glow)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 36px -6px var(--accent-glow)}
+.btn-outline{background:transparent;color:var(--text);border:1.5px solid var(--line);padding:13px 22px;font-size:15px;font-weight:600}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-2px)}
+.btn-sm{padding:9px 17px;font-size:13.5px}
+
+.eyebrow{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.tagpill{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:6px 13px;border-radius:var(--radius-pill);display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+.tagpill.live{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#180a00}
+.livedot{width:7px;height:7px;border-radius:50%;background:#180a00;flex:0 0 auto;animation:pulse 1.3s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes float1{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-14px) rotate(4deg)}}
+@keyframes float2{0%,100%{transform:translateY(0) rotate(6deg)}50%{transform:translateY(-10px) rotate(-3deg)}}
+@keyframes drift{0%{transform:translateX(0)}100%{transform:translateX(40px)}}
+@keyframes wiggle{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+.star{clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);background:var(--gold)}
+.hero .tagpill.live,.livenow-in .tagpill.live{animation:wiggle 2.6s ease-in-out infinite}
+.pcol{transition:transform .25s cubic-bezier(.34,1.56,.64,1)}
+.pcol:hover{transform:translateY(-8px) rotate(-2deg)}
+.jnum{transition:transform .25s cubic-bezier(.34,1.56,.64,1)}
+.jstep:hover .jnum{transform:scale(1.12) rotate(-8deg)}
+.grail-item img{transition:transform .25s cubic-bezier(.34,1.56,.64,1)}
+.grail-item:hover img{transform:scale(1.1) rotate(-3deg)}
+.tg-benefit .dot{transition:transform .2s cubic-bezier(.34,1.56,.64,1)}
+.tg-benefit:hover .dot{transform:scale(1.5)}
+.lb-row{transition:transform .18s ease}
+.lb-row.top:hover{transform:translateX(3px)}
+
+.coin{border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff6d8,var(--gold) 46%,var(--gold-deep) 100%);box-shadow:inset 0 -5px 9px rgba(0,0,0,.28),0 6px 18px rgba(0,0,0,.4);position:relative}
+.coin::after{content:"";position:absolute;inset:18%;border-radius:50%;border:1.5px dashed rgba(120,70,10,.35)}
+.cloud{border-radius:60% 40% 70% 30%/50% 60% 40% 50%;background:rgba(255,255,255,.06);filter:blur(1px)}
+.ribbon{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#180a00;font-family:var(--display);font-weight:800;padding:11px 26px;border-radius:6px;position:relative;display:inline-flex;align-items:center;gap:8px;font-size:14px}
+.ribbon::before,.ribbon::after{content:"";position:absolute;top:100%;border:9px solid transparent;width:0;height:0}
+.ribbon::before{left:0;border-top-color:#b23e00;border-left-color:#b23e00}
+.ribbon::after{right:0;border-top-color:#b23e00;border-right-color:#b23e00}
+.confetti span{position:absolute;width:7px;height:15px;border-radius:2px;opacity:.8}
+
+.sec{padding:52px 0;position:relative;z-index:1}
+.sechead{margin-bottom:22px;max-width:60ch}
+.sechead h2{font-family:var(--display);font-weight:800;font-size:27px;letter-spacing:-.02em;margin:8px 0 0;line-height:1.08}
+.sechead p{font-size:15px;color:var(--mute);margin:10px 0 0;line-height:1.55}
+
+/* hero */
+.hero{position:relative;overflow:visible;min-height:600px;display:flex;align-items:center;padding-bottom:30px}
+.hero-bg{position:absolute;inset:0;z-index:0;overflow:hidden}
+.hero-bg img{width:100%;height:100%;object-fit:cover;object-position:82% 30%;display:block}
+.hero-bg-shade{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(9,13,20,.35) 0%,rgba(9,13,20,.78) 46%,rgba(9,13,20,.99) 92%,var(--bg) 100%)}
+.hero .dt-wrap{position:relative;z-index:2;width:100%}
+.hero-copy{display:flex;flex-direction:column;align-items:flex-start;padding:56px 0 0}
+.hero h1{font-family:var(--display);font-weight:900;font-size:15vw;line-height:.92;letter-spacing:-.03em;margin:16px 0 0;text-shadow:0 4px 30px rgba(0,0,0,.5)}
+.hero h1 .amt{background:linear-gradient(135deg,var(--gold),var(--accent-2) 70%);-webkit-background-clip:text;background-clip:text;color:transparent;display:block;filter:drop-shadow(0 0 26px var(--gold-glow))}
+.hero-sub{color:#e4e4e4;font-size:16.5px;line-height:1.55;margin:16px 0 0;max-width:44ch}
+.hero-dates{font-family:var(--mono);font-size:13px;color:var(--sky);letter-spacing:.03em;margin:12px 0 0}
+
+.countdown{display:flex;gap:9px;margin:18px 0 0}
+.cd-box{background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:12px;padding:9px 4px;min-width:58px;text-align:center;backdrop-filter:blur(6px)}
+.cd-box .n{font-family:var(--mono);font-weight:700;font-size:23px;color:var(--gold)}
+.cd-box .l{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--mute);margin-top:2px}
+.cd-label{font-family:var(--mono);font-size:11px;color:var(--mute);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+
+.hero-ctas{margin:26px 0 0;width:100%;max-width:400px}
+.hero-ctas .btn-primary{width:100%;padding:18px;font-size:17px}
+.hero-note{font-family:var(--mono);font-size:11.5px;color:var(--mute);margin-top:12px;max-width:40ch;line-height:1.5}
+
+/* prize summary — asymmetric, no cards */
+.prizesum{display:flex;flex-direction:column;gap:14px;align-items:flex-start;position:relative}
+.prizesum-label{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.prizesum-facts{display:flex;flex-wrap:wrap;gap:18px 32px}
+.factline{display:flex;flex-direction:column;gap:2px}
+.factline .v{font-family:var(--display);font-weight:800;font-size:19px;color:var(--text)}
+.factline .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute)}
+
+/* journey */
+.journey{display:flex;flex-direction:column;gap:0;position:relative}
+.jstep{display:flex;gap:16px;padding:18px 0;position:relative}
+.jstep:not(:last-child){border-bottom:none}
+.jline{position:absolute;left:23px;top:54px;bottom:-8px;width:2px;background:repeating-linear-gradient(to bottom,var(--gold) 0 6px,transparent 6px 12px)}
+.jstep:last-child .jline{display:none}
+.jnum{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#180a00;font-family:var(--display);font-weight:800;font-size:18px;display:flex;align-items:center;justify-content:center;flex:0 0 auto;box-shadow:0 6px 18px -4px var(--accent-glow);z-index:1}
+.jbody h4{font-family:var(--display);font-weight:700;font-size:17px;margin:6px 0 4px}
+.jbody p{margin:0;color:var(--mute);font-size:14px;line-height:1.5}
+
+/* live now */
+.livenow{border-radius:var(--radius-lg);overflow:hidden;position:relative;min-height:340px;display:flex;align-items:flex-end}
+.livenow-bg{position:absolute;inset:0;z-index:0}
+.livenow-bg img{width:100%;height:100%;object-fit:cover}
+.livenow-shade{position:absolute;inset:0;background:linear-gradient(to top,rgba(6,8,12,.97),rgba(6,8,12,.7) 45%,rgba(6,8,12,.25)),linear-gradient(to right,rgba(6,8,12,.9) 0%,rgba(6,8,12,.55) 42%,transparent 78%)}
+.livenow-in{position:relative;z-index:1;padding:26px 24px;width:100%}
+.livenow-name{font-family:var(--display);font-weight:900;font-size:26px;margin:10px 0 4px;letter-spacing:-.01em}
+.livenow-meta{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0 0}
+.livenow-meta .factline .v{font-size:17px}
+.livenow-games{display:flex;gap:8px;margin:16px 0 0}
+.livenow-games img{width:44px;height:44px;border-radius:9px;object-fit:cover;border:1px solid var(--line)}
+
+/* podium */
+.podium{display:flex;align-items:flex-end;gap:10px;margin:0 0 6px;justify-content:center}
+.pcol{flex:1;max-width:150px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.pcol .badge{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:900;font-size:19px;color:#180a00}
+.p1 .badge{background:linear-gradient(135deg,#fff2c4,var(--gold));width:56px;height:56px;font-size:23px;box-shadow:0 0 30px var(--gold-glow)}
+.p2 .badge{background:linear-gradient(135deg,#e8edf2,var(--silver))}
+.p3 .badge{background:linear-gradient(135deg,#f0c090,var(--bronze))}
+.pcol .plabel{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute)}
+.pcol .pamt{font-family:var(--display);font-weight:700;font-size:14px;font-style:italic;color:var(--mute);text-align:center}
+.pstand{width:100%;border-radius:10px 10px 0 0;background:linear-gradient(180deg,var(--surface-strong),var(--surface))}
+.p1 .pstand{height:96px;background:linear-gradient(180deg,rgba(255,207,92,.22),var(--surface))}
+.p2 .pstand{height:70px}
+.p3 .pstand{height:52px}
+
+/* leaderboard */
+.lb-table{border-radius:var(--radius-lg);overflow:hidden;background:var(--surface)}
+.lb-head,.lb-row{display:grid;grid-template-columns:38px 1fr 78px 62px;gap:8px;align-items:center;padding:12px 16px}
+.lb-head{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
+.lb-row{font-size:13.5px}
+.lb-row:nth-child(odd){background:rgba(255,255,255,.02)}
+.lb-row .rk{font-family:var(--mono);font-weight:700}
+.lb-row.top .rk{color:var(--gold)}
+.lb-row .name{font-family:var(--display);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lb-row .score{font-family:var(--mono);color:var(--mute);text-align:right}
+.lb-zone{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:3px 7px;border-radius:var(--radius-pill);text-align:center;background:rgba(255,255,255,.08);color:var(--mute)}
+.lb-zone.hot{background:var(--accent-dim);color:var(--accent-2)}
+
+/* series timeline */
+.timeline{display:flex;flex-direction:column;gap:0}
+.tnode{display:flex;gap:14px;padding:14px 0;position:relative}
+.tline{position:absolute;left:15px;top:46px;bottom:-6px;width:2px;background:var(--line)}
+.tnode:last-child .tline{display:none}
+.tdot{width:32px;height:32px;border-radius:50%;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;font-weight:700;z-index:1;border:2px solid var(--line);color:var(--mute)}
+.tnode.live .tdot{background:linear-gradient(135deg,var(--accent),var(--accent-2));border-color:transparent;color:#180a00;box-shadow:0 0 0 5px var(--accent-dim);animation:pulse 1.6s infinite}
+.tnode.done .tdot{background:var(--good-dim);border-color:rgba(61,220,132,.4);color:var(--good)}
+.tname{font-family:var(--display);font-weight:700;font-size:15px}
+.tmeta{font-family:var(--mono);font-size:11.5px;color:var(--mute);margin-top:2px}
+.tnode.upcoming .tname,.tnode.upcoming .tmeta{opacity:.55}
+
+/* telegram phone mockup */
+.tg-wrap{display:flex;flex-direction:column;gap:26px;align-items:center}
+.phone{width:220px;border-radius:26px;background:#12151c;border:6px solid #1c2028;padding:14px 10px;box-shadow:0 20px 50px -14px rgba(0,0,0,.6)}
+.phone-top{text-align:center;font-family:var(--mono);font-size:10px;color:var(--mute);margin-bottom:8px}
+.bubble{background:var(--surface-strong);border-radius:12px;padding:9px 12px;font-size:11.5px;line-height:1.4;margin-bottom:8px;max-width:88%}
+.bubble.me{margin-left:auto;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#180a00}
+.tg-benefits{display:flex;flex-direction:column;gap:12px;width:100%}
+.tg-benefit{display:flex;gap:10px;align-items:flex-start}
+.tg-benefit .dot{width:8px;height:8px;border-radius:50%;background:var(--gold);margin-top:6px;flex:0 0 auto}
+.tg-benefit b{font-family:var(--display);font-weight:700;font-size:14.5px}
+.tg-benefit p{margin:2px 0 0;color:var(--mute);font-size:13px}
+
+/* games */
+.game-feature{display:flex;flex-direction:column;gap:14px;max-width:280px}
+.game-feature img{width:100%;border-radius:var(--radius-lg);aspect-ratio:1/1;object-fit:contain;background:var(--surface);image-rendering:auto}
+.game-feature-name{font-family:var(--display);font-weight:800;font-size:19px}
+.game-rail{display:flex;gap:10px;overflow-x:auto;margin-top:16px;padding-bottom:4px}
+.grail-item{flex:0 0 auto;width:76px;text-align:center}
+.grail-item img{width:76px;height:76px;border-radius:12px;object-fit:cover;border:1px solid var(--line)}
+.grail-item .n{font-size:10.5px;color:var(--mute);margin-top:5px;line-height:1.2}
+
+/* trust */
+.trust-points{display:flex;flex-direction:column;gap:12px;margin-top:6px}
+.trust-point{display:flex;gap:10px;align-items:flex-start;font-size:14.5px}
+.trust-point .ic{color:var(--good);flex:0 0 auto}
+.trust-fine{font-family:var(--mono);font-size:11px;color:var(--mute);line-height:1.7;margin-top:20px;padding-top:18px;border-top:1px solid var(--line-2)}
+
+/* faq */
+.faq-card{border-radius:var(--radius-lg);overflow:hidden;background:var(--surface)}
+.faq-item{border-bottom:1px solid var(--line-2)}
+.faq-item:last-child{border-bottom:none}
+.faq-q{width:100%;display:flex;align-items:center;justify-content:space-between;gap:14px;text-align:left;padding:17px 20px;font-family:var(--display);font-weight:600;font-size:15px;color:var(--text)}
+.faq-q:hover{background:var(--line-2)}
+.faq-q .ic{font-family:var(--mono);font-size:13px;transition:transform .2s;flex:0 0 auto;color:var(--gold)}
+.faq-item.open .faq-q .ic{transform:rotate(180deg)}
+.faq-a{overflow:hidden;max-height:0;transition:max-height .28s ease,opacity .2s;padding:0 20px}
+.faq-item.open .faq-a{max-height:260px;opacity:1;padding-bottom:18px}
+.faq-a p{margin:0;color:var(--mute);font-size:13.5px;line-height:1.6;max-width:62ch}
+
+/* final cta */
+.finalcta{border-radius:var(--radius-lg);padding:44px 24px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:14px;position:relative;overflow:hidden;background:radial-gradient(ellipse at 50% 0%,rgba(255,207,92,.16),transparent 65%),linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02))}
+.trophy{width:60px;height:70px;position:relative;margin-bottom:2px}
+.trophy .cup{width:100%;height:60%;background:linear-gradient(135deg,#fff2c4,var(--gold) 55%,var(--gold-deep));clip-path:polygon(18% 0%,82% 0%,68% 100%,32% 100%);margin:0 auto}
+.trophy .base{width:34%;height:14%;background:var(--gold-deep);margin:0 auto}
+.trophy .foot{width:60%;height:8%;background:var(--gold-deep);margin:0 auto;border-radius:3px}
+.finalcta .v{font-family:var(--display);font-weight:900;font-size:15vw;background:linear-gradient(135deg,var(--gold),var(--accent) 75%);-webkit-background-clip:text;background-clip:text;color:transparent;line-height:.9}
+.finalcta h2{font-family:var(--display);font-weight:700;font-size:15px;letter-spacing:.1em;text-transform:uppercase;color:var(--mute);margin:0}
+.finalcta p{margin:0;color:var(--mute);font-size:14.5px;max-width:44ch;line-height:1.55}
+
+/* footer */
+.footer{padding:30px 0 96px;margin-top:10px;position:relative;z-index:1}
+.foot-top{display:flex;flex-direction:column;align-items:flex-start;gap:16px}
+.foot-links{display:flex;flex-wrap:wrap;gap:16px;font-family:var(--mono);font-size:12px}
+.foot-links a{color:var(--mute)}
+.foot-links a:hover{color:var(--accent-2)}
+.foot-fine{margin-top:16px;padding-top:16px;border-top:1px solid var(--line-2);color:var(--mute);font-size:11px;line-height:1.6}
+
+/* sticky mobile cta */
+.sticky{position:fixed;left:0;right:0;bottom:0;z-index:80;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:rgba(10,13,19,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line);transform:translateY(120%);transition:transform .34s cubic-bezier(.2,.8,.2,1)}
+.sticky.show{transform:translateY(0)}
+.sticky .btn-primary{width:100%;padding:15px}
+
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .55s ease,transform .55s cubic-bezier(.2,.7,.3,1)}
+.reveal.in{opacity:1;transform:none}
+
+@media(min-width:600px){
+  .hero h1{font-size:64px}
+  .prizesum-num{font-size:110px}
+  .finalcta .v{font-size:70px}
+}
+@media(min-width:768px){
+  .dt-wrap,.dt-nav-in{padding-left:32px;padding-right:32px}
+  .hero h1{font-size:76px}
+  .hero-sub{font-size:17.5px;max-width:52ch}
+  .sechead h2{font-size:33px}
+  .journey{flex-direction:row;gap:0}
+  .jstep{flex-direction:column;flex:1;padding:0 14px}
+  .jline{left:0;right:0;top:23px;bottom:auto;height:2px;width:auto;background:repeating-linear-gradient(to right,var(--gold) 0 6px,transparent 6px 12px)}
+  .jstep:last-child .jline{display:none}
+  .prizesum-facts{gap:22px 44px}
+  .tg-wrap{flex-direction:row;align-items:center;gap:40px}
+  .tg-benefits{max-width:360px}
+  .timeline{flex-direction:row;gap:0}
+  .tnode{flex-direction:column;flex:1;padding:0 10px;align-items:flex-start}
+  .tline{left:0;right:0;top:15px;bottom:auto;height:2px;width:auto}
+  .sticky{display:none}
+}
+@media(min-width:1024px){
+  .sec{padding:80px 0}
+  .dt-nav-links{display:flex}
+  .hero{min-height:660px}
+  .hero-bg-shade{background:linear-gradient(to right,rgba(9,13,20,.97) 0%,rgba(9,13,20,.86) 30%,rgba(9,13,20,.42) 58%,rgba(9,13,20,.08) 84%)}
+  .hero-copy{max-width:660px}
+  .hero h1{font-size:88px}
+  .prizesum-num{font-size:150px}
+  .sechead h2{font-size:38px}
+  .livenow{min-height:420px}
+  .livenow-in{padding:40px 46px}
+  .finalcta .v{font-size:96px}
+}
+</style>
+</helmet>
+<div class="dt-page">
+
+  <nav class="dt-nav {{ navClass }}">
+    <div class="dt-nav-in">
+      <img class="dt-logo" src="assets/advantplay-logo-horizontal.png" alt="AdvantPlay">
+      <div class="dt-nav-links">
+        <a href="#prizes" onClick="{{ navScrollTo('prizes') }}">Prizes</a>
+        <a href="#livenow" onClick="{{ navScrollTo('livenow') }}">Live Now</a>
+        <a href="#leaderboard" onClick="{{ navScrollTo('leaderboard') }}">Leaderboard</a>
+        <a href="#faq" onClick="{{ navScrollTo('faq') }}">FAQ</a>
+      </div>
+      <a class="btn btn-primary btn-sm dt-nav-cta" href="{{ telegramUrl }}" target="_blank" rel="noopener" onClick="{{ onTelegramClick }}">Join Telegram</a>
+    </div>
+  </nav>
+
+  <header class="hero" id="hero">
+    <div class="hero-bg"><img src="assets/dragon-key-art.jpg" alt="{{ tournamentName }}"><div class="hero-bg-shade"></div></div>
+    <div class="deco" style="top:14%;left:6%"><div class="coin" style="width:26px;height:26px;animation:float1 5s ease-in-out infinite"></div></div>
+    <div class="deco" style="top:60%;left:2%"><div class="coin" style="width:18px;height:18px;animation:float2 6.5s ease-in-out infinite"></div></div>
+    <div class="dt-wrap">
+      <div class="hero-copy">
+        <span class="tagpill live"><span class="livedot"></span>Live Tournament</span>
+        <h1>Compete for<span class="amt">MYR {{ totalPrizePoolFmt }}</span></h1>
+        <p class="hero-sub">Play eligible games, grow your eligible turnover, and climb the official leaderboard.</p>
+        <p class="hero-dates">{{ campaignRange }} · MYT</p>
+        <div>
+          <div class="cd-label">{{ countdownLabel }}</div>
+          <div class="countdown">
+            <div class="cd-box"><div class="n">{{ cd.d }}</div><div class="l">Days</div></div>
+            <div class="cd-box"><div class="n">{{ cd.h }}</div><div class="l">Hrs</div></div>
+            <div class="cd-box"><div class="n">{{ cd.m }}</div><div class="l">Min</div></div>
+            <div class="cd-box"><div class="n">{{ cd.s }}</div><div class="l">Sec</div></div>
+          </div>
+        </div>
+        <div class="hero-ctas"><a class="btn btn-primary" href="{{ telegramUrl }}" target="_blank" rel="noopener" onClick="{{ onHeroTelegramClick }}">Join Telegram &amp; Enter →</a></div>
+        <p class="hero-note">Get the official tournament link, entry instructions and leaderboard updates.</p>
+      </div>
+    </div>
+  </header>
+
+  <section class="sec reveal {{ revealCls.sum }}" id="sum">
+    <div class="dt-wrap">
+      <div class="prizesum">
+        <div class="prizesum-label">Campaign at a glance</div>
+        <div class="prizesum-facts">
+          <div class="factline"><div class="v">{{ numberOfSeries }}</div><div class="k">Series</div></div>
+          <div class="factline"><div class="v">{{ winnersPerSeries }}</div><div class="k">Winners / series</div></div>
+          <div class="factline"><div class="v">{{ campaignRange }}</div><div class="k">Campaign period</div></div>
+          <div class="factline"><div class="v">Free</div><div class="k">Entry</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec reveal {{ revealCls.how }}" id="how" style="padding-top:0">
+    <div class="dt-wrap">
+      <div class="sechead"><span class="eyebrow">How to Compete</span><h2>Your tournament journey</h2></div>
+      <div class="journey">
+        <div class="jstep"><div class="jline"></div><div class="jnum">1</div><div class="jbody"><h4>Join Telegram</h4><p>Get the official link and voucher details.</p></div></div>
+        <div class="jstep"><div class="jline"></div><div class="jnum">2</div><div class="jbody"><h4>Open Tournament</h4><p>Log in on the official platform.</p></div></div>
+        <div class="jstep"><div class="jline"></div><div class="jnum">3</div><div class="jbody"><h4>Play Eligible Games</h4><p>Eligible turnover counts automatically.</p></div></div>
+        <div class="jstep"><div class="jline"></div><div class="jnum">4</div><div class="jbody"><h4>Climb the Leaderboard</h4><p>Track your rank and prize zone live.</p></div></div>
+      </div>
+      <div style="margin-top:20px"><a class="btn btn-primary" href="{{ telegramUrl }}" target="_blank" rel="noopener" onClick="{{ onHowToJoinClick }}">Join Telegram &amp; Enter →</a></div>
+    </div>
+  </section>
+
+  <section class="sec reveal {{ revealCls.livenow }}" id="livenow" style="padding-top:0">
+    <div class="dt-wrap">
+      <div class="livenow">
+        <div class="livenow-bg"><img src="assets/dragon-key-art.jpg" alt="{{ liveSeries.name }}" style="object-position:75% 20%"><div class="livenow-shade"></div></div>
+        <div class="livenow-in">
+          <span class="tagpill live"><span class="livedot"></span>Live Now</span>
+          <div class="livenow-name">{{ liveSeries.name }}</div>
+          <div class="cd-label">Series ends in</div>
+          <div class="countdown">
+            <div class="cd-box"><div class="n">{{ scd.d }}</div><div class="l">Days</div></div>
+            <div class="cd-box"><div class="n">{{ scd.h }}</div><div class="l">Hrs</div></div>
+            <div class="cd-box"><div class="n">{{ scd.m }}</div><div class="l">Min</div></div>
+            <div class="cd-box"><div class="n">{{ scd.s }}</div><div class="l">Sec</div></div>
+          </div>
+          <div class="livenow-meta">
+            <div class="factline"><div class="v">{{ liveSeries.prizePool }}</div><div class="k">Series prize pool</div></div>
+            <div class="factline"><div class="v">{{ winnersPerSeries }}</div><div class="k">Winners</div></div>
+          </div>
+          <div class="livenow-games">
+            <sc-for list="{{ games }}" as="g" hint-placeholder-count="6"><img src="{{ g.thumb }}" alt="{{ g.name }}"></sc-for>
+          </div>
+          <div style="margin-top:18px"><a class="btn btn-primary" href="{{ telegramUrl }}" target="_blank" rel="noopener" onClick="{{ onTelegramClick }}">Join Telegram &amp; Enter →</a></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec reveal {{ revealCls.prizes }}" id="prizes" style="padding-top:0">
+    <div class="dt-wrap">
+      <div class="sechead"><span class="eyebrow">Prize Breakdown</span><h2>Every series pays out</h2></div>
+      <div class="deco" style="top:-10px;left:8%"><div class="star" style="width:16px;height:16px;animation:float1 4.5s ease-in-out infinite"></div></div>
+      <div class="deco" style="top:20px;right:10%"><div class="coin" style="width:20px;height:20px;animation:float2 5.5s ease-in-out infinite"></div></div>
+      <div class="podium">
+        <div class="pcol p2"><div class="badge">2</div><div class="pstand"></div><div class="plabel">2nd</div><div class="pamt">{{ prizes.p2 }}</div></div>
+        <div class="pcol p1"><div class="badge">1</div><div class="pstand"></div><div class="plabel">1st</div><div class="pamt">{{ prizes.p1 }}</div></div>
+        <div class="pcol p3"><div class="badge">3</div><div class="pstand"></div><div class="plabel">3rd</div><div class="pamt">{{ prizes.p3 }}</div></div>
+      </div>
+      <div style="display:flex;justify-content:center;margin-top:16px"><span class="ribbon">+47 more winning positions per series</span></div>
+    </div>
+  </section>
+
+  <section class="sec reveal {{ revealCls.leaderboard }}" id="leaderboard" style="padding-top:0">
+    <div class="dt-wrap">
+      <div class="sechead"><span class="eyebrow">Leaderboard</span><h2>Climb the ranks</h2><p>Sample preview — check live standings on the official page.</p></div>
+      <div class="lb-table">
+        <div class="lb-head"><span>#</span><span>Player</span><span style="text-align:right">Turnover</span><span>Zone</span></div>
+        <sc-for list="{{ leaderboardRows }}" as="r" hint-placeholder-count="8">
+          <div class="lb-row {{ r.cls }}"><span class="rk">{{ r.rank }}</span><span class="name">{{ r.player }}</span><span class="score">{{ r.score }}</span><span class="lb-zone {{ r.zoneCls }}">{{ r.zone }}</span></div>
+        </sc-for>
+      </div>
+      <div style="margin-top:16px"><a class="btn btn-outline" href="{{ officialUrl }}" target="_blank" rel="noopener" onClick="{{ onLeaderboardOfficialClick }}">View Official Leaderboard →</a></div>
+    </div>
+  </section>
+
+  <section class="sec reveal {{ revealCls.series }}" id="series" style="padding-top:0">
+    <div class="dt-wrap">
+      <div class="sechead"><span class="eyebrow">Schedule</span><h2>Seven-series campaign</h2></div>
+      <div class="timeline">
+        <sc-for list="{{ seriesList }}" as="s" hint-placeholder-count="7">
+          <div class="tnode {{ s.status }}"><div class="tline"></div><div class="tdot">{{ s.num }}</div><div class="tname">{{ s.name }}</div><div class="tmeta">{{ s.dateRange }}</div></div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec reveal {{ revealCls.why }}" id="why" style="padding-top:0">
+    <div class="dt-wrap">
+      <div class="sechead"><span class="eyebrow">Telegram</span><h2>Get Tournament Access Through Telegram</h2></div>
+      <div class="tg-wrap" style="position:relative">
+        <div class="deco" style="top:-14px;right:6%"><div class="star" style="width:14px;height:14px;animation:float1 4s ease-in-out infinite"></div></div>
+        <div class="phone">
+          <div class="phone-top">AdvantPlay Official</div>
+          <div class="bubble">🔗 Tournament link is live — tap to enter.</div>
+          <div class="bubble">🎟️ Voucher code: DRAGON250</div>
+          <div class="bubble me">Rank #18 · Top 100 zone</div>
+          <div class="bubble">🏆 Series 1 winners announced!</div>
+        </div>
+        <div class="tg-benefits">
+          <div class="tg-benefit"><span class="dot"></span><div><b>Official access link</b><p>The verified tournament link, direct from Telegram.</p></div></div>
+          <div class="tg-benefit"><span class="dot"></span><div><b>Voucher &amp; entry details</b><p>Codes and instructions, sent as they release.</p></div></div>
+          <div class="tg-benefit"><span class="dot"></span><div><b>Leaderboard updates</b><p>Ranking movements throughout the tournament.</p></div></div>
+          <div class="tg-benefit"><span class="dot"></span><div><b>Winner announcements</b><p>Confirmed results and future campaigns.</p></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec reveal {{ revealCls.games }}" id="games" style="padding-top:0">
+    <div class="dt-wrap">
+      <div class="sechead"><span class="eyebrow">Eligible Games</span><h2>Featured this series</h2></div>
+      <div class="game-feature">
+        <img src="{{ featuredGame.thumb }}" alt="{{ featuredGame.name }}">
+        <div class="game-feature-name">{{ featuredGame.name }}</div>
+      </div>
+      <div class="game-rail">
+        <sc-for list="{{ restGames }}" as="g" hint-placeholder-count="5">
+          <div class="grail-item"><img src="{{ g.thumb }}" alt="{{ g.name }}"><div class="n">{{ g.name }}</div></div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec reveal {{ revealCls.trust }}" id="trust" style="padding-top:0">
+    <div class="dt-wrap">
+      <div class="sechead"><span class="eyebrow">Trust</span><h2>Fair Competition. Clear Rewards.</h2></div>
+      <div class="trust-points">
+        <sc-for list="{{ trustItems }}" as="t" hint-placeholder-count="4"><div class="trust-point"><span class="ic">✓</span>{{ t }}</div></sc-for>
+      </div>
+      <div class="trust-fine">18+ only. Gambling can be addictive — play responsibly. <a href="{{ termsUrl }}" target="_blank" rel="noopener">Official Terms &amp; Conditions →</a></div>
+    </div>
+  </section>
+
+  <section class="sec reveal {{ revealCls.faq }}" id="faq" style="padding-top:0">
+    <div class="dt-wrap">
+      <div class="sechead"><span class="eyebrow">FAQ</span><h2>Quick answers</h2></div>
+      <div class="faq-card">
+        <sc-for list="{{ faqs }}" as="f" hint-placeholder-count="6">
+          <div class="faq-item {{ f.cls }}">
+            <button class="faq-q" onClick="{{ f.onToggle }}">{{ f.q }}<span class="ic">⌄</span></button>
+            <div class="faq-a"><p>{{ f.a }}</p></div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec reveal {{ revealCls.finalcta }}" id="finalcta" style="padding-top:0">
+    <div class="dt-wrap">
+      <div class="finalcta">
+        <div class="confetti">
+          <span style="left:12%;top:14%;background:var(--gold);transform:rotate(18deg)"></span>
+          <span style="left:82%;top:20%;background:var(--accent-2);transform:rotate(-24deg)"></span>
+          <span style="left:24%;top:76%;background:var(--sky);transform:rotate(8deg)"></span>
+          <span style="left:70%;top:70%;background:var(--gold);transform:rotate(-10deg)"></span>
+        </div>
+        <div class="trophy"><div class="cup"></div><div class="base"></div><div class="foot"></div></div>
+        <div class="v">MYR {{ totalPrizePoolFmt }}</div>
+        <h2>Prize Pool</h2>
+        <div class="countdown">
+          <div class="cd-box"><div class="n">{{ cd.d }}</div><div class="l">Days</div></div>
+          <div class="cd-box"><div class="n">{{ cd.h }}</div><div class="l">Hrs</div></div>
+          <div class="cd-box"><div class="n">{{ cd.m }}</div><div class="l">Min</div></div>
+          <div class="cd-box"><div class="n">{{ cd.s }}</div><div class="l">Sec</div></div>
+        </div>
+        <a class="btn btn-primary" href="{{ telegramUrl }}" target="_blank" rel="noopener" onClick="{{ onFinalTelegramClick }}">Join Telegram &amp; Start Competing →</a>
+        <p>Get the official access link and tournament instructions inside Telegram.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="dt-wrap">
+      <div class="foot-top">
+        <img class="dt-logo" src="assets/advantplay-logo-horizontal.png" alt="AdvantPlay">
+        <div class="foot-links">
+          <a href="{{ termsUrl }}" target="_blank" rel="noopener">Terms &amp; Conditions</a>
+          <a href="{{ termsUrl }}" target="_blank" rel="noopener">Responsible Gaming</a>
+          <a href="{{ officialUrl }}" target="_blank" rel="noopener">Official Tournament Page</a>
+        </div>
+      </div>
+      <div class="foot-fine">© 2026 AdvantPlay. All rights reserved. Prizes and schedule subject to official terms.</div>
+    </div>
+  </footer>
+
+  <div class="sticky {{ stickyClass }}">
+    <a class="btn btn-primary" href="{{ telegramUrl }}" target="_blank" rel="noopener" onClick="{{ onStickyTelegramClick }}">Join Telegram — Enter Tournament</a>
+  </div>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+
+const CONFIG = {
+  tournamentName: "Dragon Chi's Tournament",
+  totalPrizePool: 250000,
+  numberOfSeries: 7,
+  winnersPerSeries: 50,
+  startDate: "2026-08-01T00:00:00+08:00",
+  endDate: "2026-09-04T23:59:59+08:00",
+  campaignRange: "Aug 1 – Sep 4",
+  telegramUrl: "https://t.me/advantplayofficial",
+  officialUrl: "https://advantplay-preview.netlify.app/our-games.html",
+  termsUrl: "https://advantplay-preview.netlify.app/index.html",
+};
+
+const SERIES = [
+  { id:"s1", num:"1", name:"Ember Hoard",   dateRange:"Aug 1 – Aug 5",   prizePool:"MYR 40,000", status:"done" },
+  { id:"s2", num:"2", name:"Jade Scale",    dateRange:"Aug 6 – Aug 10",  prizePool:"MYR 35,000", status:"live" },
+  { id:"s3", num:"3", name:"Golden Talon",  dateRange:"Aug 11 – Aug 15", prizePool:"MYR 38,000", status:"upcoming" },
+  { id:"s4", num:"4", name:"Crimson Wyrm",  dateRange:"Aug 16 – Aug 20", prizePool:"MYR 42,000", status:"upcoming" },
+  { id:"s5", num:"5", name:"Ivory Fang",    dateRange:"Aug 21 – Aug 25", prizePool:"MYR 30,000", status:"upcoming" },
+  { id:"s6", num:"6", name:"Obsidian Coil", dateRange:"Aug 26 – Aug 30", prizePool:"MYR 45,000", status:"upcoming" },
+  { id:"s7", num:"7", name:"Storm Serpent", dateRange:"Aug 31 – Sep 4",  prizePool:"MYR 20,000", status:"upcoming" },
+];
+
+const GAMES = [
+  { name:"Dragon Chi's Quest 2",    thumb:"assets/game-dragon-chis-quest-2.png" },
+  { name:"Aztec: Bonus Hunt 2",     thumb:"assets/game-aztec-bonus-hunt-2.png" },
+  { name:"Book of Safari",          thumb:"assets/game-book-of-safari.png" },
+  { name:"Fantastic Beast",         thumb:"assets/game-fantastic-beast.png" },
+  { name:"Last Samurai",            thumb:"assets/game-last-samurai.png" },
+  { name:"Maya: Elemental Totem 2", thumb:"assets/game-maya-elemental-totem-2.png" },
+];
+
+const TRUST_ITEMS = [
+  "Transparent prize breakdown, published per series",
+  "Official leaderboard with independent verification",
+  "Terms available before you enter",
+  "Multiple winning positions, every series",
+];
+
+const FAQS = [
+  { q:"Is the tournament free to join?", a:"Yes — entry is free once you have official access via Telegram." },
+  { q:"How do I join?", a:"Join the Telegram channel for the access link, then open the official tournament page." },
+  { q:"Why do I need Telegram?", a:"Telegram is where the access link, vouchers, reminders and results are released." },
+  { q:"How is my score calculated?", a:"Eligible turnover during the series is tracked automatically on the official page." },
+  { q:"Which games are eligible?", a:"See featured games above; the full list is on the official tournament page." },
+  { q:"When are winners announced?", a:"After each series ends, via Telegram and the official tournament page." },
+];
+
+const LEADERBOARD_SAMPLE = [
+  { rank:"1", player:"Dr***nR7", score:"482,900", zone:"Top 3" },
+  { rank:"2", player:"Lu***kyM", score:"461,250", zone:"Top 3" },
+  { rank:"3", player:"Ph***nix9", score:"438,700", zone:"Top 3" },
+  { rank:"7", player:"To***nado", score:"355,600", zone:"Top 50" },
+  { rank:"18", player:"Ne***nBolt", score:"298,400", zone:"Top 50" },
+  { rank:"52", player:"Vi***perX", score:"151,300", zone:"Top 50" },
+];
+
+function fmt(n){ return Math.round(n).toLocaleString("en-US"); }
+function pad(n){ return String(n).padStart(2,"0"); }
+function diffParts(target, now){
+  let diff = Math.max(0, target-now);
+  const d=Math.floor(diff/86400000); diff-=d*86400000;
+  const h=Math.floor(diff/3600000); diff-=h*3600000;
+  const m=Math.floor(diff/60000); diff-=m*60000;
+  const s=Math.floor(diff/1000);
+  return { d:pad(d), h:pad(h), m:pad(m), s:pad(s) };
+}
+
+function withUtm(url){
+  try{
+    const search = window.location.search;
+    if(!search) return url;
+    const u = new URL(url);
+    const params = new URLSearchParams(search);
+    params.forEach((v,k)=>{ if(k.toLowerCase().startsWith("utm_")||k==="ad_id"||k==="adset_id"||k==="creative_id") u.searchParams.set(k,v); });
+    return u.toString();
+  }catch(e){ return url; }
+}
+function trackEvent(name, params){
+  try{
+    if(window.dataLayer) window.dataLayer.push({ event:name, ...params });
+    if(window.fbq) window.fbq("trackCustom", name, params);
+    if(window.ttq) window.ttq.track(name, params);
+  }catch(e){}
+}
+
+class Component extends DCLogic {
+  state = { scrolled:false, showSticky:false, openFaq:null, revealed:{}, now: Date.now() };
+
+  componentDidMount(){
+    trackEvent("landing_page_view", {});
+    this._onScroll = () => {
+      const y = window.scrollY || window.pageYOffset;
+      this.setState({ scrolled: y > 8, showSticky: y > 480 });
+    };
+    window.addEventListener("scroll", this._onScroll, { passive:true });
+    this._timer = setInterval(() => this.setState({ now: Date.now() }), 1000);
+
+    const ids = ["sum","how","livenow","prizes","leaderboard","series","why","games","trust","faq","finalcta"];
+    const nodes = ids.map(id=>document.getElementById(id)).filter(Boolean);
+    if ("IntersectionObserver" in window) {
+      this._io = new IntersectionObserver((entries)=>{
+        entries.forEach(e=>{
+          if(e.isIntersecting){
+            this.setState(s=>({ revealed:{ ...s.revealed, [e.target.id]:true } }));
+            this._io.unobserve(e.target);
+          }
+        });
+      }, { threshold:0.08, rootMargin:"0px 0px -8% 0px" });
+      nodes.forEach(n=>this._io.observe(n));
+      this._safety = setTimeout(()=>{
+        this.setState(s=>({ revealed: ids.reduce((acc,id)=>({...acc,[id]:true}), {...s.revealed}) }));
+      }, 2200);
+    } else {
+      this.setState({ revealed: ids.reduce((acc,id)=>({...acc,[id]:true}), {}) });
+    }
+  }
+  componentWillUnmount(){
+    window.removeEventListener("scroll", this._onScroll);
+    if(this._io) this._io.disconnect();
+    if(this._safety) clearTimeout(this._safety);
+    if(this._timer) clearInterval(this._timer);
+  }
+
+  renderVals(){
+    const { openFaq, now } = this.state;
+    const telegramUrl = withUtm(CONFIG.telegramUrl);
+    const officialUrl = withUtm(CONFIG.officialUrl);
+
+    const start = new Date(CONFIG.startDate).getTime();
+    const end = new Date(CONFIG.endDate).getTime();
+    const isLive = now >= start && now < end;
+    const target = now < start ? start : end;
+    const cd = diffParts(target, now);
+    const countdownLabel = now >= end ? "Tournament has ended" : isLive ? "Tournament ends in" : "Tournament starts in";
+
+    // second (live) series countdown — series 2, Aug 6–10 2026
+    const sEnd = new Date("2026-08-10T23:59:59+08:00").getTime();
+    const scd = diffParts(sEnd, now);
+
+    const onTelegramClick = () => trackEvent("telegram_cta_click", {});
+    const onHeroTelegramClick = () => trackEvent("hero_telegram_click", {});
+    const onHowToJoinClick = () => trackEvent("how_to_join_telegram_click", {});
+    const onLeaderboardOfficialClick = () => trackEvent("leaderboard_official_click", {});
+    const onFinalTelegramClick = () => trackEvent("final_telegram_click", {});
+    const onStickyTelegramClick = () => trackEvent("sticky_mobile_telegram_click", {});
+
+    const scrollTo = (id) => { const el=document.getElementById(id); if(el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 60, behavior:"smooth" }); };
+
+    const faqs = FAQS.map((f,i)=>({ q:f.q, a:f.a, cls: openFaq===i ? "open" : "", onToggle: () => this.setState(st => ({ openFaq: st.openFaq===i ? null : i })) }));
+    const leaderboardRows = LEADERBOARD_SAMPLE.map(r => ({ ...r, cls: Number(r.rank)<=3 ? "top" : "", zoneCls: r.zone!=="Top 100" ? "hot" : "" }));
+    const seriesList = SERIES;
+    const liveSeries = SERIES.find(s=>s.status==="live") || SERIES[0];
+
+    return {
+      tournamentName: CONFIG.tournamentName,
+      totalPrizePoolFmt: fmt(CONFIG.totalPrizePool),
+      numberOfSeries: CONFIG.numberOfSeries,
+      winnersPerSeries: CONFIG.winnersPerSeries,
+      campaignRange: CONFIG.campaignRange,
+      telegramUrl, officialUrl, termsUrl: CONFIG.termsUrl,
+      onTelegramClick, onHeroTelegramClick, onHowToJoinClick, onLeaderboardOfficialClick, onFinalTelegramClick, onStickyTelegramClick,
+      navClass: this.state.scrolled ? "scrolled" : "", stickyClass: this.state.showSticky ? "show" : "",
+      navScrollTo: (id) => (e) => { e.preventDefault(); scrollTo(id); },
+      cd, scd, countdownLabel,
+      liveSeries,
+      revealCls: ["sum","how","livenow","prizes","leaderboard","series","why","games","trust","faq","finalcta"]
+        .reduce((acc,id)=>({ ...acc, [id]: this.state.revealed[id] ? "in" : "" }), {}),
+      games: GAMES,
+      featuredGame: GAMES[0],
+      restGames: GAMES.slice(1),
+      trustItems: TRUST_ITEMS,
+      faqs,
+      leaderboardRows,
+      seriesList,
+      prizes: { p1:"Amount TBC", p2:"Amount TBC", p3:"Amount TBC" },
+    };
+  }
+}
+
+</script>
+</body>
+</html>
