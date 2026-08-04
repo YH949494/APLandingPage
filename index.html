@@ -35,7 +35,7 @@
     <div class="deco" style="top:60%;left:2%"><div class="coin" style="width:18px;height:18px;animation:float2 6.5s ease-in-out infinite"></div></div>
     <div class="dt-wrap">
       <div class="hero-copy">
-        <span class="tagpill live"><span class="livedot"></span>Live Tournament</span>
+        <span class="tagpill live" id="heroLivePill"><span class="livedot"></span>Live Tournament</span>
         <h1>Compete for<span class="amt">MYR 250,000</span></h1>
         <p class="hero-sub">Play eligible games, grow your eligible turnover, and climb the official leaderboard.</p>
         <p class="hero-dates">Aug 1 – Sep 4 · MYT</p>
@@ -86,9 +86,9 @@
       <div class="livenow">
         <div class="livenow-bg"><img src="assets/dragon-key-art.jpg" alt="Jade Scale" style="object-position:75% 20%"><div class="livenow-shade"></div></div>
         <div class="livenow-in">
-          <span class="tagpill live"><span class="livedot"></span>Live Now</span>
-          <div class="livenow-name">Jade Scale</div>
-          <div class="cd-label">Series ends in</div>
+          <span class="tagpill live" id="liveSpotlightPill"><span class="livedot"></span>Live Now</span>
+          <div class="livenow-name" id="liveSeriesName">Ember Hoard</div>
+          <div class="cd-label" id="liveSpotlightLabel">Series ends in</div>
           <div class="countdown">
             <div class="cd-box"><div class="n" id="scdD">00</div><div class="l">Days</div></div>
             <div class="cd-box"><div class="n" id="scdH">00</div><div class="l">Hrs</div></div>
@@ -96,7 +96,7 @@
             <div class="cd-box"><div class="n" id="scdS">00</div><div class="l">Sec</div></div>
           </div>
           <div class="livenow-meta">
-            <div class="factline"><div class="v">MYR 35,000</div><div class="k">Series prize pool</div></div>
+            <div class="factline"><div class="v" id="liveSeriesPool">MYR 40,000</div><div class="k">Series prize pool</div></div>
             <div class="factline"><div class="v">50</div><div class="k">Winners</div></div>
           </div>
           <div class="livenow-games">
@@ -137,7 +137,7 @@
         <div class="lb-row top"><span class="rk">3</span><span class="name">Ph***nix9</span><span class="score">438,700</span><span class="lb-zone hot">Top 3</span></div>
         <div class="lb-row"><span class="rk">7</span><span class="name">To***nado</span><span class="score">355,600</span><span class="lb-zone hot">Top 50</span></div>
         <div class="lb-row"><span class="rk">18</span><span class="name">Ne***nBolt</span><span class="score">298,400</span><span class="lb-zone hot">Top 50</span></div>
-        <div class="lb-row"><span class="rk">52</span><span class="name">Vi***perX</span><span class="score">151,300</span><span class="lb-zone hot">Top 50</span></div>
+        <div class="lb-row"><span class="rk">52</span><span class="name">Vi***perX</span><span class="score">151,300</span><span class="lb-zone">Outside Top 50</span></div>
       </div>
       <div style="margin-top:16px"><a class="btn btn-outline" href="#" target="_blank" rel="noopener" data-official-link data-track="leaderboard_official_click">View Official Leaderboard →</a></div>
     </div>
@@ -147,13 +147,13 @@
     <div class="dt-wrap">
       <div class="sechead"><span class="eyebrow">Schedule</span><h2>Seven-series campaign</h2></div>
       <div class="timeline">
-        <div class="tnode done"><div class="tline"></div><div class="tdot">1</div><div class="tname">Ember Hoard</div><div class="tmeta">Aug 1 – Aug 5</div></div>
-        <div class="tnode live"><div class="tline"></div><div class="tdot">2</div><div class="tname">Jade Scale</div><div class="tmeta">Aug 6 – Aug 10</div></div>
-        <div class="tnode upcoming"><div class="tline"></div><div class="tdot">3</div><div class="tname">Golden Talon</div><div class="tmeta">Aug 11 – Aug 15</div></div>
-        <div class="tnode upcoming"><div class="tline"></div><div class="tdot">4</div><div class="tname">Crimson Wyrm</div><div class="tmeta">Aug 16 – Aug 20</div></div>
-        <div class="tnode upcoming"><div class="tline"></div><div class="tdot">5</div><div class="tname">Ivory Fang</div><div class="tmeta">Aug 21 – Aug 25</div></div>
-        <div class="tnode upcoming"><div class="tline"></div><div class="tdot">6</div><div class="tname">Obsidian Coil</div><div class="tmeta">Aug 26 – Aug 30</div></div>
-        <div class="tnode upcoming"><div class="tline"></div><div class="tdot">7</div><div class="tname">Storm Serpent</div><div class="tmeta">Aug 31 – Sep 4</div></div>
+        <div class="tnode" data-start="2026-08-01T00:00:00+08:00" data-end="2026-08-05T23:59:59+08:00" data-pool="MYR 40,000"><div class="tline"></div><div class="tdot">1</div><div class="tname">Ember Hoard</div><div class="tmeta">Aug 1 – Aug 5</div></div>
+        <div class="tnode" data-start="2026-08-06T00:00:00+08:00" data-end="2026-08-10T23:59:59+08:00" data-pool="MYR 35,000"><div class="tline"></div><div class="tdot">2</div><div class="tname">Jade Scale</div><div class="tmeta">Aug 6 – Aug 10</div></div>
+        <div class="tnode" data-start="2026-08-11T00:00:00+08:00" data-end="2026-08-15T23:59:59+08:00" data-pool="MYR 38,000"><div class="tline"></div><div class="tdot">3</div><div class="tname">Golden Talon</div><div class="tmeta">Aug 11 – Aug 15</div></div>
+        <div class="tnode" data-start="2026-08-16T00:00:00+08:00" data-end="2026-08-20T23:59:59+08:00" data-pool="MYR 42,000"><div class="tline"></div><div class="tdot">4</div><div class="tname">Crimson Wyrm</div><div class="tmeta">Aug 16 – Aug 20</div></div>
+        <div class="tnode" data-start="2026-08-21T00:00:00+08:00" data-end="2026-08-25T23:59:59+08:00" data-pool="MYR 30,000"><div class="tline"></div><div class="tdot">5</div><div class="tname">Ivory Fang</div><div class="tmeta">Aug 21 – Aug 25</div></div>
+        <div class="tnode" data-start="2026-08-26T00:00:00+08:00" data-end="2026-08-30T23:59:59+08:00" data-pool="MYR 45,000"><div class="tline"></div><div class="tdot">6</div><div class="tname">Obsidian Coil</div><div class="tmeta">Aug 26 – Aug 30</div></div>
+        <div class="tnode" data-start="2026-08-31T00:00:00+08:00" data-end="2026-09-04T23:59:59+08:00" data-pool="MYR 20,000"><div class="tline"></div><div class="tdot">7</div><div class="tname">Storm Serpent</div><div class="tmeta">Aug 31 – Sep 4</div></div>
       </div>
     </div>
   </section>

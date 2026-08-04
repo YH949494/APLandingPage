@@ -125,7 +125,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .livenow-name{font-family:var(--display);font-weight:900;font-size:26px;margin:10px 0 4px;letter-spacing:-.01em}
 .livenow-meta{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0 0}
 .livenow-meta .factline .v{font-size:17px}
-.livenow-games{display:flex;gap:8px;margin:16px 0 0}
+.livenow-games{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 0}
 .livenow-games img{width:44px;height:44px;border-radius:9px;object-fit:cover;border:1px solid var(--line)}
 
 /* podium */

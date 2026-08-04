@@ -10,7 +10,6 @@
 
   const START = new Date("2026-08-01T00:00:00+08:00").getTime();
   const END = new Date("2026-09-04T23:59:59+08:00").getTime();
-  const SERIES_END = new Date("2026-08-10T23:59:59+08:00").getTime();
 
   function withUtm(url) {
     try {
@@ -138,6 +137,68 @@
     if (el) el.textContent = val;
   }
 
+  function updateHeroLivePill(now) {
+    const pill = document.getElementById("heroLivePill");
+    if (!pill) return;
+    if (now >= END) {
+      pill.classList.remove("live");
+      pill.innerHTML = "Tournament Ended";
+    } else if (now < START) {
+      pill.classList.remove("live");
+      pill.innerHTML = "Starts Soon";
+    } else {
+      pill.classList.add("live");
+      pill.innerHTML = '<span class="livedot"></span>Live Tournament';
+    }
+  }
+
+  // Derives the currently-active series from each timeline node's
+  // data-start/data-end so the spotlight and countdown track real dates
+  // instead of a fixed series regardless of when the page is viewed.
+  function updateSeriesSpotlight(now) {
+    const nodes = [...document.querySelectorAll("#series .tnode")];
+    if (!nodes.length) return;
+
+    let live = null, nextUpcoming = null, lastDone = null;
+    nodes.forEach((n) => {
+      const start = new Date(n.dataset.start).getTime();
+      const end = new Date(n.dataset.end).getTime();
+      let status;
+      if (now > end) { status = "done"; lastDone = n; }
+      else if (now >= start) { status = "live"; live = n; }
+      else { status = "upcoming"; if (!nextUpcoming) nextUpcoming = n; }
+      n.className = "tnode " + status;
+    });
+
+    const spotlight = live || nextUpcoming || lastDone;
+    if (!spotlight) return;
+
+    setText("liveSeriesName", spotlight.querySelector(".tname").textContent);
+    setText("liveSeriesPool", spotlight.dataset.pool);
+
+    const pill = document.getElementById("liveSpotlightPill");
+    const label = document.getElementById("liveSpotlightLabel");
+    const start = new Date(spotlight.dataset.start).getTime();
+    const end = new Date(spotlight.dataset.end).getTime();
+    let target;
+    if (live) {
+      if (pill) pill.innerHTML = '<span class="livedot"></span>Live Now';
+      if (label) label.textContent = "Series ends in";
+      target = end;
+    } else if (nextUpcoming) {
+      if (pill) pill.innerHTML = "Starts Soon";
+      if (label) label.textContent = "Series starts in";
+      target = start;
+    } else {
+      if (pill) pill.innerHTML = "Series Ended";
+      if (label) label.textContent = "Series ended";
+      target = end;
+    }
+
+    const scd = diffParts(target, now);
+    setText("scdD", scd.d); setText("scdH", scd.h); setText("scdM", scd.m); setText("scdS", scd.s);
+  }
+
   function updateCountdowns() {
     const now = Date.now();
     const isLive = now >= START && now < END;
@@ -149,8 +210,8 @@
     setText("cdD", cd.d); setText("cdH", cd.h); setText("cdM", cd.m); setText("cdS", cd.s);
     setText("cd2D", cd.d); setText("cd2H", cd.h); setText("cd2M", cd.m); setText("cd2S", cd.s);
 
-    const scd = diffParts(SERIES_END, now);
-    setText("scdD", scd.d); setText("scdH", scd.h); setText("scdM", scd.m); setText("scdS", scd.s);
+    updateHeroLivePill(now);
+    updateSeriesSpotlight(now);
   }
 
   function wireCountdown() {
