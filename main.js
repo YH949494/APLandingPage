@@ -8,6 +8,10 @@
     supportUrl: "https://t.me/advantplayofficial",
   };
 
+  const START = new Date("2026-08-01T00:00:00+08:00").getTime();
+  const END = new Date("2026-09-04T23:59:59+08:00").getTime();
+  const SERIES_END = new Date("2026-08-10T23:59:59+08:00").getTime();
+
   function withUtm(url) {
     try {
       const search = window.location.search;
@@ -116,23 +120,42 @@
     });
   }
 
-  function wireSeriesExpand() {
-    const btn = document.getElementById("seriesExpandBtn");
-    const wrap = document.getElementById("seriesExpandWrap");
-    btn.addEventListener("click", () => {
-      document.querySelectorAll(".scard.series-extra").forEach((el) => el.removeAttribute("hidden"));
-      wrap.style.display = "none";
-    });
+  function pad(n) {
+    return String(n).padStart(2, "0");
   }
 
-  function wireSeriesClickTracking() {
-    document.querySelectorAll(".scard").forEach((card) => {
-      const idx = card.getAttribute("data-series-index");
-      const link = card.querySelector(".scard-foot a");
-      if (link) {
-        link.addEventListener("click", () => trackEvent("series_view", { series: "s" + (Number(idx) + 1) }));
-      }
-    });
+  function diffParts(target, now) {
+    let diff = Math.max(0, target - now);
+    const d = Math.floor(diff / 86400000); diff -= d * 86400000;
+    const h = Math.floor(diff / 3600000); diff -= h * 3600000;
+    const m = Math.floor(diff / 60000); diff -= m * 60000;
+    const s = Math.floor(diff / 1000);
+    return { d: pad(d), h: pad(h), m: pad(m), s: pad(s) };
+  }
+
+  function setText(id, val) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val;
+  }
+
+  function updateCountdowns() {
+    const now = Date.now();
+    const isLive = now >= START && now < END;
+    const target = now < START ? START : END;
+    const cd = diffParts(target, now);
+    const label = now >= END ? "Tournament has ended" : isLive ? "Tournament ends in" : "Tournament starts in";
+
+    setText("cdLabel", label);
+    setText("cdD", cd.d); setText("cdH", cd.h); setText("cdM", cd.m); setText("cdS", cd.s);
+    setText("cd2D", cd.d); setText("cd2H", cd.h); setText("cd2M", cd.m); setText("cd2S", cd.s);
+
+    const scd = diffParts(SERIES_END, now);
+    setText("scdD", scd.d); setText("scdH", scd.h); setText("scdM", scd.m); setText("scdS", scd.s);
+  }
+
+  function wireCountdown() {
+    updateCountdowns();
+    setInterval(updateCountdowns, 1000);
   }
 
   document.addEventListener("DOMContentLoaded", () => {
@@ -142,7 +165,6 @@
     wireNavAndSticky();
     wireReveal();
     wireFaq();
-    wireSeriesExpand();
-    wireSeriesClickTracking();
+    wireCountdown();
   });
 })();
