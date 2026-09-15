@@ -5,7 +5,6 @@
     telegramUrl: "https://t.me/advantplayofficial",
     officialUrl: "https://advantplay-preview.netlify.app/our-games.html",
     termsUrl: "https://advantplay-preview.netlify.app/index.html",
-    supportUrl: "https://t.me/advantplayofficial",
   };
 
   const START = new Date("2026-08-01T00:00:00+08:00").getTime();
@@ -42,7 +41,6 @@
     document.querySelectorAll("[data-telegram-link]").forEach((el) => (el.href = telegram));
     document.querySelectorAll("[data-official-link]").forEach((el) => (el.href = official));
     document.querySelectorAll("[data-terms-link]").forEach((el) => (el.href = CONFIG.termsUrl));
-    document.querySelectorAll("[data-support-link]").forEach((el) => (el.href = CONFIG.supportUrl));
     document.querySelectorAll("[data-track]").forEach((el) => {
       el.addEventListener("click", () => trackEvent(el.getAttribute("data-track"), {}));
     });
@@ -60,61 +58,6 @@
       el.addEventListener("click", (e) => {
         e.preventDefault();
         scrollToId(el.getAttribute("data-target"));
-      });
-    });
-    document.querySelectorAll("[data-scroll-btn]").forEach((el) => {
-      el.addEventListener("click", () => scrollToId(el.getAttribute("data-target")));
-    });
-  }
-
-  function wireNavAndSticky() {
-    const nav = document.getElementById("nav");
-    const sticky = document.getElementById("stickyCta");
-    const onScroll = () => {
-      const y = window.scrollY || window.pageYOffset;
-      nav.classList.toggle("scrolled", y > 8);
-      sticky.classList.toggle("show", y > 480);
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-  }
-
-  function wireReveal() {
-    const nodes = [...document.querySelectorAll("[data-reveal]")];
-    const reveal = (el) => el.classList.add("in");
-    if ("IntersectionObserver" in window) {
-      const io = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              reveal(entry.target);
-              const id = entry.target.id;
-              if (id === "series") trackEvent("series_view", {});
-              if (id === "prizes") trackEvent("prize_section_view", {});
-              if (id === "games") trackEvent("eligible_games_view", {});
-              io.unobserve(entry.target);
-            }
-          });
-        },
-        { threshold: 0.1, rootMargin: "0px 0px -8% 0px" }
-      );
-      nodes.forEach((n) => io.observe(n));
-      setTimeout(() => nodes.forEach(reveal), 2200);
-    } else {
-      nodes.forEach(reveal);
-    }
-  }
-
-  function wireFaq() {
-    document.querySelectorAll("#faqCard .faq-item").forEach((item) => {
-      const q = item.querySelector(".faq-q");
-      q.addEventListener("click", () => {
-        const wasOpen = item.classList.contains("open");
-        document.querySelectorAll("#faqCard .faq-item.open").forEach((o) => o.classList.remove("open"));
-        if (!wasOpen) {
-          item.classList.add("open");
-          trackEvent("faq_open", { question: q.textContent.trim() });
-        }
       });
     });
   }
@@ -137,86 +80,107 @@
     if (el) el.textContent = val;
   }
 
-  function updateHeroLivePill(now) {
-    const pill = document.getElementById("heroLivePill");
-    if (!pill) return;
-    if (now >= END) {
-      pill.classList.remove("live");
-      pill.innerHTML = "Tournament Ended";
-    } else if (now < START) {
-      pill.classList.remove("live");
-      pill.innerHTML = "Starts Soon";
-    } else {
-      pill.classList.add("live");
-      pill.innerHTML = '<span class="livedot"></span>Live Tournament';
-    }
-  }
-
-  // Derives the currently-active series from each timeline node's
-  // data-start/data-end so the spotlight and countdown track real dates
-  // instead of a fixed series regardless of when the page is viewed.
-  function updateSeriesSpotlight(now) {
-    const nodes = [...document.querySelectorAll("#series .tnode")];
-    if (!nodes.length) return;
-
-    let live = null, nextUpcoming = null, lastDone = null;
-    nodes.forEach((n) => {
-      const start = new Date(n.dataset.start).getTime();
-      const end = new Date(n.dataset.end).getTime();
-      let status;
-      if (now > end) { status = "done"; lastDone = n; }
-      else if (now >= start) { status = "live"; live = n; }
-      else { status = "upcoming"; if (!nextUpcoming) nextUpcoming = n; }
-      n.className = "tnode " + status;
-    });
-
-    const spotlight = live || nextUpcoming || lastDone;
-    if (!spotlight) return;
-
-    setText("liveSeriesName", spotlight.querySelector(".tname").textContent);
-    setText("liveSeriesPool", spotlight.dataset.pool);
-
-    const pill = document.getElementById("liveSpotlightPill");
-    const label = document.getElementById("liveSpotlightLabel");
-    const start = new Date(spotlight.dataset.start).getTime();
-    const end = new Date(spotlight.dataset.end).getTime();
-    let target;
-    if (live) {
-      if (pill) pill.innerHTML = '<span class="livedot"></span>Live Now';
-      if (label) label.textContent = "Series ends in";
-      target = end;
-    } else if (nextUpcoming) {
-      if (pill) pill.innerHTML = "Starts Soon";
-      if (label) label.textContent = "Series starts in";
-      target = start;
-    } else {
-      if (pill) pill.innerHTML = "Series Ended";
-      if (label) label.textContent = "Series ended";
-      target = end;
-    }
-
-    const scd = diffParts(target, now);
-    setText("scdD", scd.d); setText("scdH", scd.h); setText("scdM", scd.m); setText("scdS", scd.s);
-  }
-
-  function updateCountdowns() {
-    const now = Date.now();
+  function updateCountdown(now) {
     const isLive = now >= START && now < END;
-    const target = now < START ? START : END;
+    const isEnded = now >= END;
+    const target = isEnded ? END : isLive ? END : START;
     const cd = diffParts(target, now);
-    const label = now >= END ? "Tournament has ended" : isLive ? "Tournament ends in" : "Tournament starts in";
-
+    const label = isEnded ? "Tournament has ended" : isLive ? "Tournament ends in" : "Tournament starts in";
     setText("cdLabel", label);
     setText("cdD", cd.d); setText("cdH", cd.h); setText("cdM", cd.m); setText("cdS", cd.s);
-    setText("cd2D", cd.d); setText("cd2H", cd.h); setText("cd2M", cd.m); setText("cd2S", cd.s);
+  }
 
-    updateHeroLivePill(now);
-    updateSeriesSpotlight(now);
+  // Derives each round card's live/upcoming/done state from its own
+  // data-start/data-end so the schedule always reflects the real date
+  // instead of a status baked in at design time.
+  function updateRounds(now) {
+    document.querySelectorAll(".round-card").forEach((card) => {
+      const start = new Date(card.dataset.start).getTime();
+      const end = new Date(card.dataset.end).getTime();
+      const statusEl = card.querySelector(".round-status");
+      let status, text;
+      if (now > end) { status = "done"; text = "Ended"; }
+      else if (now >= start) { status = "live"; text = "Live Now"; }
+      else { status = "upcoming"; text = "Upcoming"; }
+      card.classList.remove("live", "upcoming", "done");
+      card.classList.add(status);
+      if (statusEl) {
+        statusEl.className = "round-status " + status;
+        statusEl.textContent = text;
+      }
+    });
   }
 
   function wireCountdown() {
-    updateCountdowns();
-    setInterval(updateCountdowns, 1000);
+    const tick = () => {
+      const now = Date.now();
+      updateCountdown(now);
+      updateRounds(now);
+    };
+    tick();
+    setInterval(tick, 1000);
+  }
+
+  function clamp01(v) { return Math.max(0, Math.min(1, v)); }
+  function smoothstep(t) { return t * t * (3 - 2 * t); }
+
+  // Cinematic hero: as the user scrolls through the hero art, the key art
+  // darkens to the page background and the CTA/note fade out ahead of it,
+  // so the transition into the next section reads as a deliberate reveal
+  // rather than the background art just being clipped off.
+  function wireHeroScroll() {
+    const heroEl = document.getElementById("hero");
+    const bgFixed = document.getElementById("heroBgFixed");
+    const heroImg = document.getElementById("heroImg");
+    const heroFade = document.getElementById("heroFade");
+    const heroCtas = document.getElementById("heroCtas");
+    const heroNote = document.getElementById("heroNote");
+    if (!heroEl || !bgFixed) return;
+
+    let heroH = heroEl.offsetHeight || 800;
+    const measure = () => {
+      heroH = heroEl.offsetHeight || 800;
+      bgFixed.style.height = heroH + "px";
+    };
+    measure();
+    window.addEventListener("resize", measure);
+
+    const apply = () => {
+      const y = window.scrollY || window.pageYOffset;
+
+      const fadeEnd = heroH;
+      const fadeStart = heroH - Math.min(280, Math.max(160, heroH * 0.28));
+      const fadeT = smoothstep(clamp01((y - fadeStart) / (fadeEnd - fadeStart)));
+
+      const noteStart = heroH * 0.58, noteEnd = heroH * 0.73;
+      const noteT = smoothstep(clamp01((y - noteStart) / (noteEnd - noteStart)));
+
+      const ctaStart = heroH * 0.70, ctaEnd = heroH * 0.85;
+      const ctaT = smoothstep(clamp01((y - ctaStart) / (ctaEnd - ctaStart)));
+
+      if (heroFade) heroFade.style.opacity = fadeT;
+      if (heroImg) heroImg.style.filter = `brightness(${(1 - 0.55 * fadeT).toFixed(3)})`;
+      if (heroNote) heroNote.style.opacity = (1 - noteT).toFixed(3);
+      if (heroCtas) {
+        heroCtas.style.opacity = (1 - ctaT).toFixed(3);
+        heroCtas.style.transform = `translateY(${Math.round(ctaT * 10)}px)`;
+        heroCtas.style.pointerEvents = ctaT > 0.9 ? "none" : "auto";
+      }
+    };
+    apply();
+    window.addEventListener("scroll", apply, { passive: true });
+  }
+
+  function wireNavAndSticky() {
+    const nav = document.getElementById("nav");
+    const sticky = document.getElementById("stickyCta");
+    const onScroll = () => {
+      const y = window.scrollY || window.pageYOffset;
+      if (nav) nav.classList.toggle("scrolled", y > 8);
+      if (sticky) sticky.classList.toggle("show", y > 480);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
   }
 
   document.addEventListener("DOMContentLoaded", () => {
@@ -224,8 +188,7 @@
     wireLinks();
     wireScrollNav();
     wireNavAndSticky();
-    wireReveal();
-    wireFaq();
+    wireHeroScroll();
     wireCountdown();
   });
 })();
